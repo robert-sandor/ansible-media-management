@@ -1,0 +1,27 @@
+- name: Create project folder
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: '0750'
+  with_items:
+    - "{{ common.folders.project }}"
+    - "{{ common.folders.config }}"
+
+- name: Template docker compose file
+  ansible.builtin.template:
+    src: ./templates/docker-compose.yml.j2
+    dest: "{{ common.folders.project }}/docker-compose.yml"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: '0640'
+
+- name: Create docker network {{ common.network.name }}
+  community.docker.docker_network:
+    name: "{{ common.network.name }}"
+
+- name: Start docker-compose services
+  community.docker.docker_compose:
+    project_name: media-server
+    project_src: "{{ common.folders.project }}"

@@ -1,0 +1,32 @@
+---
+- name: Install Media server with various configurable services
+  
+  hosts: all
+  
+  gather_facts: yes
+
+  vars_files:
+    - ./vars.default.yml
+    - ./vars.yml
+
+  roles:
+    # Install latest docker
+    - name: geerlingguy.docker
+      become: yes
+      vars:
+        docker_install_compose: false
+        docker_users: "{{ ansible_facts.user_id }}"
+    # Install pip, and python packages for docker and docker-compose
+    - name: geerlingguy.pip
+      become: yes
+      vars:
+        pip_install_packages:
+            - name: docker
+            - name: docker-compose
+
+  tasks:
+    - name: Reset connection to reload user changes
+      ansible.builtin.meta: reset_connection
+
+    - name: Prepare docker compose project
+      ansible.builtin.import_tasks: ./tasks/prepare-compose-project.yml

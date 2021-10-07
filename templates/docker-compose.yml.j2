@@ -1,0 +1,143 @@
+version: "3.8"
+
+services:
+
+{% if qbittorrent.install %}
+    {{ qbittorrent.name }}:
+        container_name: {{ qbittorrent.name }}
+        hostname: {{ qbittorrent.hostname }}
+        image: {{ qbittorrent.image }}
+        restart: {{ common.docker.restart_policy }}
+        environment:
+            - PUID={{ ansible_facts.user_uid }}
+            - PGID={{ ansible_facts.user_gid }}
+            - TZ={{ common.timezone }}
+            - WEBUI_PORT={{ qbittorrent.ui_port }}
+        volumes:
+            - {{ common.folders.config }}/qbittorrent:/config
+            - {{ common.folders.downloads }}:/downloads
+        networks:
+            - {{ common.network.name }}
+        ports:
+            - {{ qbittorrent.torrent_port }}:{{ qbittorrent.torrent_port }}
+            - {{ qbittorrent.torrent_port }}:{{ qbittorrent.torrent_port }}/udp
+            - {{ qbittorrent.ui_port }}:{{ qbittorrent.ui_port }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.{{ qbittorrent.name }}.rule=Host(`{{ qbittorrent.hostname }}.{{ common.domain }}`)
+            - traefik.http.routers.{{ qbittorrent.name }}.entrypoints=web
+            - traefik.http.services.{{ qbittorrent.name }}.loadbalancer.server.port={{ qbittorrent.ui_port }}
+            - traefik.http.routers.{{ qbittorrent.name }}.service={{ qbittorrent.name }}
+
+{% endif %}
+{% if jackett.install %}
+    {{ jackett.name }}:
+        container_name: {{ jackett.name }}
+        hostname: {{ jackett.hostname }}
+        image: {{ jackett.image }}
+        restart: {{ common.docker.restart_policy }}
+        environment:
+            - PUID={{ ansible_facts.user_uid }}
+            - PGID={{ ansible_facts.user_gid }}
+            - TZ={{ common.timezone }}
+{% if jackett.apply_dark_theme %}
+            - DOCKER_MODS=ghcr.io/gilbn/theme.park:jackett
+{% endif %}
+        volumes:
+            - {{ common.folders.config }}/jackett:/config
+        networks:
+            - {{ common.network.name }}
+        ports:
+            - {{ jackett.port }}:{{ jackett.port }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.{{ jackett.name }}.rule=Host(`{{ jackett.hostname }}.{{ common.domain }}`)
+            - traefik.http.routers.{{ jackett.name }}.entrypoints=web
+            - traefik.http.services.{{ jackett.name }}.loadbalancer.server.port={{ jackett.port }}
+            - traefik.http.routers.{{ jackett.name }}.service={{ jackett.name }}
+
+{% endif %}
+{% if sonarr.install %}
+    {{ sonarr.name }}:
+        container_name: {{ sonarr.name }}
+        hostname: {{ sonarr.hostname }}
+        image: {{ sonarr.image }}
+        restart: {{ common.docker.restart_policy }}
+        environment:
+            - PUID={{ ansible_facts.user_uid }}
+            - PGID={{ ansible_facts.user_gid }}
+            - TZ={{ common.timezone }}
+{% if sonarr.apply_dark_theme %}
+            - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
+{% endif %}
+        volumes:
+            - {{ common.folders.config }}/sonarr:/config
+            - {{ common.folders.data }}:/data
+        networks:
+            - {{ common.network.name }}
+        ports:
+            - {{ sonarr.port }}:{{ sonarr.port }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.{{ sonarr.name }}.rule=Host(`{{ sonarr.hostname }}.{{ common.domain }}`)
+            - traefik.http.routers.{{ sonarr.name }}.entrypoints=web
+            - traefik.http.services.{{ sonarr.name }}.loadbalancer.server.port={{ sonarr.port }}
+            - traefik.http.routers.{{ sonarr.name }}.service={{ sonarr.name }}
+
+{% endif %}
+{% if radarr.install %}
+    {{ radarr.name }}:
+        container_name: {{ radarr.name }}
+        hostname: {{ radarr.hostname }}
+        image: {{ radarr.image }}
+        restart: {{ common.docker.restart_policy }}
+        environment:
+            - PUID={{ ansible_facts.user_uid }}
+            - PGID={{ ansible_facts.user_gid }}
+            - TZ={{ common.timezone }}
+{% if radarr.apply_dark_theme %}
+            - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
+{% endif %}
+        volumes:
+            - {{ common.folders.config }}/radarr:/config
+            - {{ common.folders.data }}:/data
+        networks:
+            - {{ common.network.name }}
+        ports:
+            - {{ radarr.port }}:{{ radarr.port }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.{{ radarr.name }}.rule=Host(`{{ radarr.hostname }}.{{ common.domain }}`)
+            - traefik.http.routers.{{ radarr.name }}.entrypoints=web
+            - traefik.http.services.{{ radarr.name }}.loadbalancer.server.port={{ radarr.port }}
+            - traefik.http.routers.{{ radarr.name }}.service={{ radarr.name }}
+
+{% endif %}
+{% if overseerr.install %}
+    {{ overseerr.name }}:
+        container_name: {{ overseerr.name }}
+        hostname: {{ overseerr.hostname }}
+        image: {{ overseerr.image }}
+        restart: {{ common.docker.restart_policy }}
+        environment:
+            - PUID={{ ansible_facts.user_uid }}
+            - PGID={{ ansible_facts.user_gid }}
+            - TZ={{ common.timezone }}
+        volumes:
+            - {{ common.folders.config }}/overseerr:/config
+        networks:
+            - {{ common.network.name }}
+        ports:
+            - {{ overseerr.port }}:{{ overseerr.port }}
+        labels:
+            - traefik.enable=true
+            - traefik.http.routers.{{ overseerr.name }}.rule=Host(`{{ overseerr.hostname }}.{{ common.domain }}`)
+            - traefik.http.routers.{{ overseerr.name }}.entrypoints=web
+            - traefik.http.services.{{ overseerr.name }}.loadbalancer.server.port={{ overseerr.port }}
+            - traefik.http.routers.{{ overseerr.name }}.service={{ overseerr.name }}
+
+{% endif %}
+networks:
+    {{ common.network.name }}:
+        external:
+            name: {{ common.network.name }}

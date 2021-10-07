@@ -1,0 +1,52 @@
+common:
+  timezone: Europe/Bucharest
+  domain: yavin.beta
+  docker:
+    restart_policy: unless-stopped
+  network:
+    name: media-net
+  folders:
+    project: ~/media-server
+    data: ~/data
+    config: ~/media-server/config
+    downloads: ~/data/downloads
+    media: ~/data/media
+
+qbittorrent:
+  install: true
+  name: qbittorrent
+  hostname: qbittorrent
+  image: linuxserver/qbittorrent
+  ui_port: 8082
+  torrent_port: 6881
+
+jackett:
+  install: true
+  name: jackett
+  hostname: jackett
+  image: linuxserver/jackett
+  port: 9117
+  apply_dark_theme: true
+
+sonarr:
+  install: true
+  name: sonarr
+  hostname: sonarr
+  image: linuxserver/sonarr
+  port: 8989
+  apply_dark_theme: true
+
+radarr:
+  install: true
+  name: radarr
+  hostname: radarr
+  image: linuxserver/radarr
+  port: 7878
+  apply_dark_theme: true
+
+overseerr:
+  install: true
+  name: overseerr
+  hostname: overseerr
+  image: linuxserver/overseerr
+  port: 5055
