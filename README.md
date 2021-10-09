@@ -4,7 +4,7 @@ Playbook for deploying a media server using services like Sonarr, Radarr, etc.
 
 WIP - more documentation to be added later
 
-*NOTE*: 
+*NOTE*: Although this playbook sets as many settings as it can, it's advised to go through each service to double-check them.
 
 ## [qbittorrent](https://github.com/qbittorrent/qBittorrent)
 
