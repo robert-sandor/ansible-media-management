@@ -30,3 +30,6 @@
 
     - name: Prepare docker compose project
       ansible.builtin.import_tasks: ./tasks/prepare-compose-project.yml
+
+    - name: Configure QBittorrent
+      ansible.builtin.import_tasks: ./tasks/configure-qbittorrent.yml

@@ -19,6 +19,31 @@ qbittorrent:
   image: linuxserver/qbittorrent
   ui_port: 8082
   torrent_port: 6881
+  default_username: admin
+  default_password: adminadmin
+  settings:
+    preferences:
+      save_path: /downloads
+      max_active_downloads: 50
+      max_active_torrents: 50
+      max_active_uploads: 50
+      alt_dl_limit: 5242880
+      alt_up_limit: 5242880
+      web_ui_username: admin
+      web_ui_password: changeme
+      bypass_auth_subnet_whitelist_enabled: false
+      bypass_auth_subnet_whitelist: "192.168.0.0/16"
+      alternative_webui_enabled: true
+      alternative_webui_path: "/config/vuetorrent"
+    categories:
+      - name: movie
+        path: /downloads/movie
+      - name: tv
+        path: /downloads/tv
+      - name: iso
+        path: /downloads/iso
+      - name: misc
+        path: /downloads/misc
 
 jackett:
   install: true

@@ -1,0 +1,65 @@
+- name: Authenticate with qbittorrent using default credentials
+  ansible.builtin.uri:
+    url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/auth/login"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ qbittorrent.default_username }}"
+      password: "{{ qbittorrent.default_password }}"
+    headers:
+      Referer: "http://localhost:{{ qbittorrent.ui_port }}"
+  register: auth_response
+
+- name: Save qbittorrent cookie
+  ansible.builtin.set_fact:
+    qbt_cookie: "{{ auth_response.cookies_string }}"
+
+- name: Authenticate with qbittorrent using changed credentials
+  ansible.builtin.uri:
+    url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/auth/login"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      username: "{{ qbittorrent.settings.preferences.web_ui_username }}"
+      password: "{{ qbittorrent.settings.preferences.web_ui_password }}"
+    headers:
+      Referer: "http://localhost:{{ qbittorrent.ui_port }}"
+  register: auth_response
+  when: qbt_cookie == ""
+
+- name: Save qbittorrent cookie
+  ansible.builtin.set_fact:
+    qbt_cookie: "{{ auth_response.cookies_string }}"
+  when: qbt_cookie == ""
+
+- name: Attempt to create categories in qbittorrent
+  ansible.builtin.uri:
+    url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/torrents/createCategory"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      category: "{{ item.name }}"
+      savePath: "{{ item.path }}"
+    headers:
+      Cookie: "{{ qbt_cookie }}"
+    status_code: 200, 409
+  with_items: "{{ qbittorrent.settings.categories }}"
+
+- name: Get VueTorrent
+  ansible.builtin.git:
+    repo: https://github.com/WDaan/VueTorrent.git
+    dest: "{{ common.folders.config }}/qbittorrent/vuetorrent"
+    single_branch: yes
+    version: latest-release
+  when: qbittorrent.settings.preferences.alternative_webui_enabled
+
+- name: Set preferences in qbittorrent
+  ansible.builtin.uri:
+    url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/app/setPreferences"
+    method: POST
+    body_format: form-urlencoded
+    body:
+      json: "{{ qbittorrent.settings.preferences | to_json }}"
+    headers:
+      Cookie: "{{ qbt_cookie }}"
+    status_code: 200
