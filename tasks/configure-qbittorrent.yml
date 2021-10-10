@@ -9,6 +9,9 @@
     headers:
       Referer: "http://localhost:{{ qbittorrent.ui_port }}"
   register: auth_response
+  retries: 10
+  delay: 10
+  until: auth_response.status != -1 
 
 - name: Save qbittorrent cookie
   ansible.builtin.set_fact:
