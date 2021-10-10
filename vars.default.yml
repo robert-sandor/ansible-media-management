@@ -1,6 +1,6 @@
 common:
-  timezone: Europe/Bucharest
-  domain: yavin.beta
+  timezone: Etc/UTC
+  domain: change.me
   docker:
     restart_policy: unless-stopped
   network:
@@ -52,6 +52,37 @@ jackett:
   image: linuxserver/jackett
   port: 9117
   apply_dark_theme: true
+  admin_password: changeme
+  server_config:
+    port: 9117
+    external: true
+    updatedisabled: false
+    prerelease: false
+    blackholedir: ''
+    logging: false
+    basepathoverride: ''
+    cache_enabled: true
+    cache_ttl: '7200'
+    cache_max_results_per_indexer: '1000'
+    flaresolverrurl: ''
+    omdbkey: ''
+    omdburl: ''
+    proxy_type: '-1'
+    proxy_url: ''
+    proxy_port: ''
+    proxy_username: ''
+    proxy_password: ''
+  indexer:
+    name: changeme
+    config:
+      - id: sitelink
+        value: https://change.me/
+      - id: username
+        value: changeme
+      - id: passkey
+        value: changeme
+      - id: tags
+        value: ""
 
 sonarr:
   install: true

@@ -1,0 +1,44 @@
+- name: Get jackett cookie
+  ansible.builtin.uri:
+    url: "http://localhost:{{ jackett.port }}/UI/Login"
+    method: GET
+  register: auth_response
+
+- name: Set jackett indexer config
+  ansible.builtin.uri:
+    url: "http://localhost:{{ jackett.port }}/api/v2.0/indexers/{{ jackett.indexer.name }}/config"
+    method: POST
+    body_format: json
+    body: "{{ jackett.indexer.config }}"
+    headers:
+      Cookie: "{{ auth_response.cookies_string }}"
+    status_code: 204
+
+- name: Set jackett server config
+  ansible.builtin.uri:
+    url: "http://localhost:{{ jackett.port }}/api/v2.0/server/config"
+    method: POST
+    body_format: json
+    body: "{{ jackett.server_config }}"
+    headers:
+      Cookie: "{{ auth_response.cookies_string }}"
+
+- name: Set jackett admin password
+  ansible.builtin.uri:
+    url: "http://localhost:{{ jackett.port }}/api/v2.0/server/adminpassword"
+    method: POST
+    body_format: json
+    body: "{{ jackett.admin_password }}"
+    headers:
+      Cookie: "{{ auth_response.cookies_string }}"
+    status_code: 204
+
+- name: Read the ServerConfig file
+  ansible.builtin.shell:
+    cmd: "cat {{ common.folders.config }}/jackett/Jackett/ServerConfig.json | grep APIKey | cut -d ':' -f2 | tr -d ' \",\"'"
+  register: jacket_api_lookup
+
+- name: Save jackett facts
+  ansible.builtin.set_fact:
+    jackett_api_key: "{{ jacket_api_lookup.stdout }}"
+    jackett_torznab_url: "http://jackett:{{ jackett.port }}/api/v2.0/indexers/{{ jackett.indexer.name }}/results/torznab/"
