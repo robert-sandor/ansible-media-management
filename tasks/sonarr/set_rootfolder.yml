@@ -1,0 +1,19 @@
+- name: Get sonarr root folder
+  uri:
+    url: "{{ sonarr_api_url }}/rootFolder?apiKey={{ sonarr_api_key }}"
+    method: GET
+  register: _response
+
+- name: Check if a rootfolder exists
+  set_fact:
+    rootpath_not_set: "{{ _response.json | json_query('[*].path') | length() == 0 }}"
+
+- name: Add sonarr rootfolder
+  uri:
+    url: "{{ sonarr_api_url }}/rootFolder?apiKey={{ sonarr_api_key }}"
+    method: POST
+    body_format: json
+    body:
+      path: "{{ sonarr.settings.root_folder }}"
+    status_code: 201
+  when: rootpath_not_set

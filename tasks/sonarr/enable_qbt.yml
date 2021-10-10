@@ -1,0 +1,62 @@
+- name: Get sonarr download clients
+  uri:
+    url: "{{ sonarr_api_url }}/downloadclient?apiKey={{ sonarr_api_key }}"
+    method: GET
+  register: _response
+
+- name: Save download clients Json data to a Variable as a Fact
+  set_fact:
+    qbt_not_configured: "{{ _response.json | json_query('[?name == `qbittorrent`]') | length() == 0 }}"
+
+- name: Add qbittorrent download client
+  uri:
+    url: "{{ sonarr_api_url }}/downloadclient?apiKey={{sonarr_api_key}}"
+    method: POST
+    body_format: json
+    body:
+      enable: true
+      protocol: torrent
+      priority: 1
+      removeCompletedDownloads: false
+      removeFailedDownloads: true
+      name: qbittorrent
+      fields:
+        - name: host
+          value: qbittorrent
+        - name: port
+          value: '{{ qbittorrent.ui_port }}'
+        - name: useSsl
+          value: false
+        - name: urlBase
+        - name: username
+          value: "{{ qbittorrent.settings.preferences.web_ui_username }}"
+        - name: password
+          value: "{{ qbittorrent.settings.preferences.web_ui_password }}"
+        - name: tvCategory
+          value: "{{ sonarr.settings.qbt_category }}"
+        - name: tvImportedCategory
+        - name: recentTvPriority
+          value: 0
+        - name: olderTvPriority
+          value: 0
+        - name: initialState
+          value: 0
+      implementationName: qBittorrent
+      implementation: QBittorrent
+      configContract: QBittorrentSettings
+      infoLink: 'https://wiki.servarr.com/sonarr/supported#qbittorrent'
+      tags: []
+    status_code: 201
+  when: qbt_not_configured
+
+- name: Add qbittorrent remote mapping
+  uri:
+    url: "{{ sonarr_api_url }}/remotepathmapping?apiKey={{sonarr_api_key}}"
+    method: POST
+    body_format: json
+    body:
+      host: qbittorrent
+      remotePath: "{{ sonarr.settings.remote_path_qbt }}"
+      localPath: "/data{{ sonarr.settings.remote_path_qbt }}"
+    status_code: 201
+  when: qbt_not_configured

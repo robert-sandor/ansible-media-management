@@ -1,0 +1,52 @@
+- name: Get radarr indexers
+  uri:
+    url: "{{ radarr_api_url }}/indexer?apiKey={{ radarr_api_key }}"
+    follow_redirects: none
+    method: GET
+  register: _response
+
+- name: Save whether jackett is already configured
+  ansible.builtin.set_fact:
+    jackett_not_configured: "{{ _response.json | json_query('[?name == `Jackett`]') | length() == 0 }}"
+
+- name: Configure jackett as indexer
+  ansible.builtin.uri:
+    url: "{{ radarr_api_url }}/indexer?apiKey={{ radarr_api_key }}"
+    method: POST
+    body_format: json
+    body:
+      enableRss: true
+      enableAutomaticSearch: true
+      enableInteractiveSearch: true
+      supportsRss: true
+      supportsSearch: true
+      protocol: torrent
+      priority: 25
+      name: Jackett
+      fields:
+        - name: baseUrl
+          value: "{{ jackett_torznab_url }}"
+        - name: apiPath
+          value: /api
+        - name: multiLanguages
+          value: []
+        - name: apiKey
+          value: '{{ jackett_api_key }}'
+        - name: categories
+          value: "{{ radarr.settings.indexer_categories }}"
+        - name: minimumSeeders
+          value: "{{ radarr.settings.minimum_seeders }}"
+        - name: seedCriteria.seedRatio
+        - name: seedCriteria.seedTime
+        - name: additionalParameters
+        - name: removeYear
+          value: false
+        - name: requiredFlags
+          value: []
+      implementationName: Torznab
+      implementation: Torznab
+      configContract: TorznabSettings
+      infoLink: 'https://wiki.servarr.com/Radarr_Supported_torznab'
+      tags: []
+    status_code: 201
+  when: jackett_not_configured

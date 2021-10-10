@@ -1,0 +1,63 @@
+- name: Get radarr download clients
+  uri:
+    url: "{{ radarr_api_url }}/downloadclient?apiKey={{ radarr_api_key }}"
+    method: GET
+  register: _response
+
+- name: Save download clients Json data to a Variable as a Fact
+  set_fact:
+    qbt_not_configured: "{{ _response.json | json_query('[?name == `qbittorrent`]') | length() == 0 }}"
+
+- name: Add qbittorrent download client
+  uri:
+    url: "{{ radarr_api_url }}/downloadclient?apiKey={{ radarr_api_key }}"
+    follow_redirects: none
+    method: POST
+    body_format: json
+    body:
+      enable: true
+      protocol: torrent
+      priority: 1
+      removeCompletedDownloads: false
+      removeFailedDownloads: true
+      name: qbittorrent
+      fields:
+        - name: host
+          value: qbittorrent
+        - name: port
+          value: '{{ qbittorrent.ui_port }}'
+        - name: useSsl
+          value: false
+        - name: urlBase
+        - name: username
+          value: "{{ qbittorrent.settings.preferences.web_ui_username }}"
+        - name: password
+          value: "{{ qbittorrent.settings.preferences.web_ui_password }}"
+        - name: movieCategory
+          value: "{{ radarr.settings.qbt_category }}"
+        - name: movieImportedCategory
+        - name: recentMoviePriority
+          value: 0
+        - name: olderMoviePriority
+          value: 0
+        - name: initialState
+          value: 0
+      implementationName: qBittorrent
+      implementation: QBittorrent
+      configContract: QBittorrentSettings
+      infoLink: 'https://wiki.servarr.com/radarr/supported#qbittorrent'
+      tags: []
+    status_code: 201
+  when: qbt_not_configured
+
+- name: Add qbittorrent remote mapping
+  uri:
+    url: "{{ radarr_api_url }}/remotepathmapping?apiKey={{ radarr_api_key }}"
+    method: POST
+    body_format: json
+    body:
+      host: qbittorrent
+      remotePath: "{{ radarr.settings.remote_path_qbt }}"
+      localPath: "/data{{ radarr.settings.remote_path_qbt }}"
+    status_code: 201
+  when: qbt_not_configured

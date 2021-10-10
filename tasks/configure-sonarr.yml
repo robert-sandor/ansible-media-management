@@ -1,0 +1,31 @@
+- name: Create TV folder
+  ansible.builtin.file:
+    path: "{{ common.folders.media }}/tv"
+    state: directory
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: '0750'
+
+- name: Get sonarr API Key
+  ansible.builtin.shell:
+    cmd: "cat {{ common.folders.config }}/sonarr/config.xml | grep ApiKey | tr '<' '>' | cut -d '>' -f3"
+  register: _response
+
+- name: Save sonarr API key
+  ansible.builtin.set_fact:
+    sonarr_api_key: "{{ _response.stdout }}"
+
+- name: Set Sonarr API URL
+  ansible.builtin.set_fact:
+    sonarr_api_url: "http://localhost:{{sonarr.port}}/api/v3"
+
+- name: Add jackett to sonarr
+  ansible.builtin.import_tasks: ./tasks/sonarr/set_rootfolder.yml
+
+- name: Add jackett to sonarr
+  ansible.builtin.import_tasks: ./tasks/sonarr/enable_jackett.yml
+  when: jackett.install
+
+- name: Add qbittorrent to sonarr
+  ansible.builtin.import_tasks: ./tasks/sonarr/enable_qbt.yml
+  when: qbittorrent.install

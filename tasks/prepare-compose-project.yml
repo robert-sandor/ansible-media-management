@@ -8,6 +8,9 @@
   with_items:
     - "{{ common.folders.project }}"
     - "{{ common.folders.config }}"
+    - "{{ common.folders.data }}"
+    - "{{ common.folders.downloads }}"
+    - "{{ common.folders.media }}"
 
 - name: Template docker compose file
   ansible.builtin.template:

@@ -33,3 +33,16 @@
 
     - name: Configure QBittorrent
       ansible.builtin.import_tasks: ./tasks/configure-qbittorrent.yml
+      when: qbittorrent.install
+    
+    - name: Configure Jackett
+      ansible.builtin.import_tasks: ./tasks/configure-jackett.yml
+      when: jackett.install
+
+    - name: Configure Sonarr
+      ansible.builtin.import_tasks: ./tasks/configure-sonarr.yml
+      when: sonarr.install
+
+    - name: Configure Radarr
+      ansible.builtin.import_tasks: ./tasks/configure-radarr.yml
+      when: radarr.install

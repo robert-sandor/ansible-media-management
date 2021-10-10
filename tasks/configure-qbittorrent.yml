@@ -35,6 +35,15 @@
     qbt_cookie: "{{ auth_response.cookies_string }}"
   when: qbt_cookie == ""
 
+- name: Create folders for categories
+  ansible.builtin.file:
+    path: "{{ common.folders.data }}/{{ item.path }}"
+    state: directory
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: '0750'
+   with_items: "{{ qbittorrent.settings.categories }}"
+
 - name: Attempt to create categories in qbittorrent
   ansible.builtin.uri:
     url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/torrents/createCategory"

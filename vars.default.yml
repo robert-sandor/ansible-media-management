@@ -91,6 +91,12 @@ sonarr:
   image: linuxserver/sonarr
   port: 8989
   apply_dark_theme: true
+  settings:
+    indexer_categories: [ ]
+    minimum_seeders: 5
+    qbt_category: tv
+    root_folder: /data/media/tv
+    remote_path_qbt: /downloads/tv # should match the tv category path from qbittorrent settings
 
 radarr:
   install: true
@@ -99,6 +105,12 @@ radarr:
   image: linuxserver/radarr
   port: 7878
   apply_dark_theme: true
+  settings:
+    indexer_categories: [ ]
+    minimum_seeders: 5
+    qbt_category: movie
+    root_folder: /data/media/movie
+    remote_path_qbt: /downloads/movie # should match the movie category path from qbittorrent settings
 
 overseerr:
   install: true
