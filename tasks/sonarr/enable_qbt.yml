@@ -3,6 +3,9 @@
     url: "{{ sonarr_api_url }}/downloadclient?apiKey={{ sonarr_api_key }}"
     method: GET
   register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 
 
 - name: Save download clients Json data to a Variable as a Fact
   set_fact:
@@ -48,6 +51,10 @@
       tags: []
     status_code: 201
   when: qbt_not_configured
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 
 
 - name: Add qbittorrent remote mapping
   uri:
@@ -60,3 +67,7 @@
       localPath: "/data{{ sonarr.settings.remote_path_qbt }}"
     status_code: 201
   when: qbt_not_configured
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 

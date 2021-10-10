@@ -8,14 +8,14 @@
       password: "{{ qbittorrent.default_password }}"
     headers:
       Referer: "http://localhost:{{ qbittorrent.ui_port }}"
-  register: auth_response
+  register: _response
   retries: 10
   delay: 10
-  until: auth_response.status != -1 
+  until: _response.status != -1 
 
 - name: Save qbittorrent cookie
   ansible.builtin.set_fact:
-    qbt_cookie: "{{ auth_response.cookies_string }}"
+    qbt_cookie: "{{ _response.cookies_string }}"
 
 - name: Authenticate with qbittorrent using changed credentials
   ansible.builtin.uri:
@@ -27,12 +27,15 @@
       password: "{{ qbittorrent.settings.preferences.web_ui_password }}"
     headers:
       Referer: "http://localhost:{{ qbittorrent.ui_port }}"
-  register: auth_response
+  register: _response
   when: qbt_cookie == ""
+  retries: 10
+  delay: 10
+  until: _response.status != -1 
 
 - name: Save qbittorrent cookie
   ansible.builtin.set_fact:
-    qbt_cookie: "{{ auth_response.cookies_string }}"
+    qbt_cookie: "{{ _response.cookies_string }}"
   when: qbt_cookie == ""
 
 - name: Create folders for categories
@@ -42,7 +45,7 @@
     owner: "{{ ansible_facts.user_id }}"
     group: "{{ ansible_facts.user_id }}"
     mode: '0750'
-   with_items: "{{ qbittorrent.settings.categories }}"
+  with_items: "{{ qbittorrent.settings.categories }}"
 
 - name: Attempt to create categories in qbittorrent
   ansible.builtin.uri:
@@ -56,6 +59,10 @@
       Cookie: "{{ qbt_cookie }}"
     status_code: 200, 409
   with_items: "{{ qbittorrent.settings.categories }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 
 
 - name: Get VueTorrent
   ansible.builtin.git:
@@ -75,3 +82,7 @@
     headers:
       Cookie: "{{ qbt_cookie }}"
     status_code: 200
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 

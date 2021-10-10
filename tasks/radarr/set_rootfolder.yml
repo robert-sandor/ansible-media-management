@@ -3,6 +3,9 @@
     url: "{{ radarr_api_url }}/rootFolder?apiKey={{ radarr_api_key }}"
     method: GET
   register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 
 
 - name: Check if a rootfolder exists
   set_fact:
@@ -17,3 +20,7 @@
       path: "{{ radarr.settings.root_folder }}"
     status_code: 201
   when: rootpath_not_set
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 

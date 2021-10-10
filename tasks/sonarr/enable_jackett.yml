@@ -4,6 +4,9 @@
     follow_redirects: none
     method: GET
   register: _response
+  retries: 10
+  delay: 10
+  until: auth_response.status != -1
 
 - name: Save whether jackett is already configured
   ansible.builtin.set_fact:
@@ -47,3 +50,7 @@
       tags: []
     status_code: 201
   when: jackett_not_configured
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 

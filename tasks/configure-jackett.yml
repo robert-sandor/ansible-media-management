@@ -3,6 +3,9 @@
     url: "http://localhost:{{ jackett.port }}/UI/Login"
     method: GET
   register: auth_response
+  retries: 10
+  delay: 10
+  until: auth_response.status != -1
 
 - name: Set jackett indexer config
   ansible.builtin.uri:
@@ -13,6 +16,10 @@
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
     status_code: 204
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
 
 - name: Set jackett server config
   ansible.builtin.uri:
@@ -22,6 +29,10 @@
     body: "{{ jackett.server_config }}"
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
 
 - name: Set jackett admin password
   ansible.builtin.uri:
@@ -32,6 +43,10 @@
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
     status_code: 204
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
 
 - name: Read the ServerConfig file
   ansible.builtin.shell:
