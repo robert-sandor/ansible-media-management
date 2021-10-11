@@ -1,0 +1,14 @@
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Update system
+  ansible.builtin.apt:
+    upgrade: dist
+
+- name: Update timezone to {{ common.timezone }}
+  ansible.builtin.timezone:
+    name: "{{ common.timezone }}"
+
+- name: Reboot host
+  ansible.builtin.reboot:

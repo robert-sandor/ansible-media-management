@@ -9,6 +9,11 @@
     - ./vars.default.yml
     - ./vars.yml
 
+  pre_tasks:
+    - name: Setup and update host
+      ansible.builtin.import_tasks: ./tasks/setup-host.yml
+      become: yes
+
   roles:
     # Install latest docker
     - name: geerlingguy.docker

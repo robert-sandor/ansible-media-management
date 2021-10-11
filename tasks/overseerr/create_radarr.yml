@@ -82,7 +82,7 @@
         "activeProfileName": "{{ radarr_profile_name[0] }}",
         "activeDirectory": "{{ radarr.settings.root_folder }}",
         "is4k": false,
-        "minimumAvailability": "In Cinema",
+        "minimumAvailability": "In Cinemas",
         "isDefault": true,
         "externalUrl": "http://radarr.{{ common.domain }}",
         "syncEnabled": true,
