@@ -118,3 +118,14 @@ overseerr:
   hostname: overseerr
   image: linuxserver/overseerr
   port: 5055
+  settings:
+    plex_auth_token: changeme # Plex auth token, to get it follow https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
+    plex_ip: 192.168.1.1      # IP address of the plex server running locally
+    plex_port: 32400          # Port of the Plex server, usually 32400
+    sonarr:
+      profile_name: "HD-1080p"
+      language_profile_name: "English"
+    radarr:
+      profile_name: "HD-1080p"
+      language_profile_name: "English"
+    

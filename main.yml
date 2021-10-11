@@ -46,3 +46,7 @@
     - name: Configure Radarr
       ansible.builtin.import_tasks: ./tasks/configure-radarr.yml
       when: radarr.install
+
+    - name: Configure Overseerr
+      ansible.builtin.import_tasks: ./tasks/configure-overseerr.yml
+      when: overseerr.install

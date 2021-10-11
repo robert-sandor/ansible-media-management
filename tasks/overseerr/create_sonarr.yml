@@ -1,0 +1,100 @@
+- name: Get sonarr servers
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/sonarr"
+    method: GET
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
+
+- name: Check for existing sonarr servers with same hostname and port
+  ansible.builtin.set_fact:
+    existing_sonarr_ids: "{{ _response.json | json_query(q) }}"
+  vars:
+    q: "[?hostname == `sonarr` && port == `{{ sonarr.port }}`].id"
+
+- name: Save existing sonarr ID and state
+  ansible.builtin.set_fact:
+    existing_sonarr_id: "{{ existing_sonarr_ids[0] | default('') }}"
+    existing_sonarr: "{{ existing_sonarr_ids | length() > 0 }}"
+
+- name: Test sonarr connection
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/sonarr/test"
+    method: POST
+    body_format: json
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+    body: |
+      {
+        "hostname": "sonarr",
+        "port": {{ sonarr.port }},
+        "apiKey": "{{ sonarr_api_key }}",
+        "useSsl": false,
+        "baseUrl": ""
+      }
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
+
+- name: Save sonarr test response
+  ansible.builtin.set_fact:
+    sonarr_test_response: "{{ _response.json }}"
+
+- name: Find ID of profile {{ overseerr.settings.sonarr.profile_name }}
+  ansible.builtin.set_fact:
+    sonarr_profile_ids: "{{ sonarr_test_response | json_query(profile_query) }}"
+    sonarr_language_profile_ids: "{{ sonarr_test_response | json_query(language_profile_query) }}"
+  vars: 
+    profile_query: "profiles[?name == `{{ overseerr.settings.sonarr.profile_name }}`].id"
+    language_profile_query: "languageProfiles[?name == `{{ overseerr.settings.sonarr.language_profile_name }}`].id"
+
+- name: Check that profiles exist and set to default if they don't
+  ansible.builtin.set_fact:
+    sonarr_profile_id: "{{ sonarr_profile_ids[0] | default(4) }}"
+    sonarr_language_profile_id: "{{ sonarr_language_profile_ids[0] | default(1) }}"
+
+- name: Get name of the selected profile
+  ansible.builtin.set_fact:
+    sonarr_profile_name: "{{ sonarr_test_response | json_query(profile_query) }}"
+  vars: 
+    profile_query: "profiles[?id == `{{ sonarr_profile_id }}`].name"
+
+- name: "{{ existing_sonarr | ternary('Updating', 'Creating') }} sonarr server configuration"
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/sonarr/{{ existing_sonarr | ternary(existing_sonarr_id, '') }}"
+    method: "{{ existing_sonarr | ternary('PUT', 'POST') }}"
+    body_format: json
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+    body: |
+      {
+        "name": "sonarr",
+        "hostname": "sonarr",
+        "port": {{ sonarr.port }},
+        "apiKey": "{{ sonarr_api_key }}",
+        "useSsl": false,
+        "baseUrl": "",
+        "activeProfileId": {{ sonarr_profile_id }},
+        "activeProfileName": "{{ sonarr_profile_name[0] }}",
+        "activeDirectory": "{{ sonarr.settings.root_folder }}",
+        "activeLanguageProfileId": {{ sonarr_language_profile_id }},
+        "activeAnimeProfileId": {{ sonarr_profile_id }},
+        "activeAnimeLanguageProfileId": {{ sonarr_language_profile_id }},
+        "activeAnimeProfileName": "{{ sonarr_profile_name[0] }}",
+        "activeAnimeDirectory": "{{ sonarr.settings.root_folder }}",
+        "is4k": false,
+        "enableSeasonFolders": true,
+        "isDefault": true,
+        "externalUrl": "http://sonarr.{{ common.domain }}",
+        "syncEnabled": true,
+        "preventSearch": false
+      }
+    status_code: "{{ existing_sonarr | ternary('200', '201') }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
