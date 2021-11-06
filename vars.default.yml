@@ -1,16 +1,13 @@
-common:
-  timezone: Etc/UTC
-  domain: change.me
-  docker:
-    restart_policy: unless-stopped
-  network:
-    name: media-net
-  folders:
-    project: ~/media-server
-    data: ~/data
-    config: ~/media-server/config
-    downloads: ~/data/downloads
-    media: ~/data/media
+timezone: Etc/UTC
+domain: change.me
+restart_policy: unless-stopped
+network_name: media-net
+folders:
+  project: ~/media-server
+  data: ~/data
+  config: ~/media-server/config
+  downloads: ~/data/downloads
+  media: ~/data/media
 
 # Traefik
 traefik_enable: yes
@@ -20,6 +17,8 @@ traefik_image: traefik
 traefik_enable_metrics: yes
 traefik_enable_access_logs: no
 traefik_metrics_port: 8082
+
+# ACME Certificates config
 acme_email: email@example.com
 acme_provider: cloudflare
 acme_volume: acme-data
@@ -28,12 +27,16 @@ acme_env:
   CF_API_EMAIL: email@example.com
   CF_DNS_API_TOKEN: <cloudflare_token>
 
+###
+# Qbittorrent
 qbt_enable: true
 qbt_name: qbittorrent
 qbt_hostname: "{{ qbt_name }}"
 qbt_volume: "{{ qbt_name }}-data"
 qbt_image: lscr.io/linuxserver/qbittorrent
 qbt_version: latest
+
+# Qbittorrent server config
 qbt_ui_port: 8082
 qbt_torrent_port: 6881
 qbt_default_username: admin
@@ -59,7 +62,9 @@ qbt_categories:
       path: /downloads/iso
     - name: misc
       path: /downloads/misc
+###
 
+###
 # Jackett
 jackett_enable: true
 jackett_name: jackett
@@ -71,7 +76,6 @@ jackett_port: 9117
 jackett_apply_dark_theme: true
 jackett_admin_password: changeme
 
-###
 # Jackett server config
 jackett_config_port: 9117
 jackett_config_external: true
