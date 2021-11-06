@@ -1,10 +1,7 @@
 - name: Create Movie folder
-  ansible.builtin.file:
-    path: "{{ folders.media }}/movie"
-    state: directory
-    owner: "{{ ansible_facts.user_id }}"
-    group: "{{ ansible_facts.user_id }}"
-    mode: '0750'
+  community.docker.docker_container_exec:
+    container: "{{ radarr_name }}"
+    command: "mkdir -p {{ radarr_root_folder }}"
 
 - name: Get radarr volume info
   community.docker.docker_volume_info:

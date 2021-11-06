@@ -39,12 +39,9 @@
   when: qbt_cookie == ""
 
 - name: Create folders for categories
-  ansible.builtin.file:
-    path: "{{ folders.data }}/{{ item.path }}"
-    state: directory
-    owner: "{{ ansible_facts.user_id }}"
-    group: "{{ ansible_facts.user_id }}"
-    mode: '0750'
+  community.docker.docker_container_exec:
+    container: "{{ qbt_name }}"
+    command: "mkdir -p {{ item.path }}"
   with_items: "{{ qbt_categories }}"
 
 - name: Attempt to create categories in qbittorrent
@@ -72,6 +69,7 @@
   ansible.builtin.set_fact:
     qbt_pref:
       save_path: "{{ qbt_save_path }}"
+      auto_tmm_enabled: "{{ qbt_auto_tmm_enabled }}"
       max_active_downloads: "{{ qbt_max_active_downloads }}"
       max_active_torrents: "{{ qbt_max_active_torrents }}"
       max_active_uploads: "{{ qbt_max_active_uploads }}"

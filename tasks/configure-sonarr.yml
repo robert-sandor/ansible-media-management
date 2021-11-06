@@ -1,10 +1,7 @@
 - name: Create TV folder
-  ansible.builtin.file:
-    path: "{{ folders.media }}/tv"
-    state: directory
-    owner: "{{ ansible_facts.user_id }}"
-    group: "{{ ansible_facts.user_id }}"
-    mode: '0750'
+  community.docker.docker_container_exec:
+    container: "{{ sonarr_name }}"
+    command: "mkdir -p {{ sonarr_root_folder }}"
 
 - name: Get sonarr volume info
   community.docker.docker_volume_info:

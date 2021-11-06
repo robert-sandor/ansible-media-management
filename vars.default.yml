@@ -2,12 +2,11 @@ timezone: Etc/UTC
 domain: change.me
 restart_policy: unless-stopped
 network_name: media-net
-folders:
-  project: ~/media-server
-  data: ~/data
-  config: ~/media-server/config
-  downloads: ~/data/downloads
-  media: ~/data/media
+project_folder: ~/media-server
+
+nfs_data_server: 192.168.1.10
+nfs_data_device: /data
+nfs_data_volume: nfs-data
 
 # Traefik
 traefik_enable: yes
@@ -33,7 +32,7 @@ qbt_enable: true
 qbt_name: qbittorrent
 qbt_hostname: "{{ qbt_name }}"
 qbt_volume: "{{ qbt_name }}-data"
-qbt_image: lscr.io/linuxserver/qbittorrent
+qbt_image: ghcr.io/linuxserver/qbittorrent
 qbt_version: latest
 
 # Qbittorrent server config
@@ -42,6 +41,7 @@ qbt_torrent_port: 6881
 qbt_default_username: admin
 qbt_default_password: adminadmin
 qbt_save_path: /downloads
+qbt_auto_tmm_enabled: true
 qbt_max_active_downloads: 50
 qbt_max_active_torrents: 50
 qbt_max_active_uploads: 50
@@ -53,15 +53,16 @@ qbt_bypass_auth_subnet_whitelist_enabled: no
 qbt_bypass_auth_subnet_whitelist: "192.168.0.0/16"
 qbt_alternative_webui_enabled: no
 qbt_alternative_webui_path: "/config/vuetorrent"
+qbt_download_folder: "/data/downloads"
 qbt_categories:
     - name: movie
-      path: /downloads/movie
+      path: "{{ qbt_download_folder }}/movies"
     - name: tv
-      path: /downloads/tv
+      path: "{{ qbt_download_folder }}/tv"
     - name: iso
-      path: /downloads/iso
+      path: "{{ qbt_download_folder }}/isos"
     - name: misc
-      path: /downloads/misc
+      path: "{{ qbt_download_folder }}/misc"
 ###
 
 ###
@@ -70,7 +71,7 @@ jackett_enable: true
 jackett_name: jackett
 jackett_hostname: "{{ jackett_name }}"
 jackett_volume: "{{ jackett_name }}-data"
-jackett_image: lscr.io/linuxserver/jackett
+jackett_image: ghcr.io/linuxserver/jackett
 jackett_version: latest
 jackett_port: 9117
 jackett_apply_dark_theme: true
@@ -113,7 +114,7 @@ sonarr_enable: true
 sonarr_name: sonarr
 sonarr_hostname: "{{ sonarr_name }}"
 sonarr_volume: "{{ sonarr_name }}-data"
-sonarr_image: lscr.io/linuxserver/sonarr
+sonarr_image: ghcr.io/linuxserver/sonarr
 sonarr_version: latest
 sonarr_port: 8989
 sonarr_apply_dark_theme: yes
@@ -121,27 +122,27 @@ sonarr_indexer_categories: [ ]
 sonarr_minimum_seeders: 5
 sonarr_qbt_category: tv
 sonarr_root_folder: /data/media/tv
-sonarr_remote_path_qbt: /downloads/tv # should match the tv category path from qbittorrent settings
+sonarr_remote_path_qbt: "{{ qbt_download_folder }}/tv" # should match the tv category path from qbittorrent settings
 
 radarr_enable: true
 radarr_name: radarr
 radarr_hostname: "{{ radarr_name }}"
 radarr_volume: "{{ radarr_name }}-data"
-radarr_image: lscr.io/linuxserver/radarr
+radarr_image: ghcr.io/linuxserver/radarr
 radarr_version: latest
 radarr_port: 7878
 radarr_apply_dark_theme: yes
 radarr_indexer_categories: [ ]
 radarr_minimum_seeders: 5
 radarr_qbt_category: movie
-radarr_root_folder: /data/media/movie
-radarr_remote_path_qbt: /downloads/movie # should match the movie category path from qbittorrent settings
+radarr_root_folder: /data/media/movies
+radarr_remote_path_qbt: "{{ qbt_download_folder }}/movies" # should match the movie category path from qbittorrent settings
 
 overseerr_enable: true
 overseerr_name: overseerr
 overseerr_hostname: "{{ overseerr_name }}"
 overseerr_volume: "{{ overseerr_name }}-data"
-overseerr_image: lscr.io/linuxserver/overseerr
+overseerr_image: ghcr.io/linuxserver/overseerr
 overseerr_version: latest
 overseerr_port: 5055
 overseerr_plex_auth_token: changeme # Plex auth token, to get it follow https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/

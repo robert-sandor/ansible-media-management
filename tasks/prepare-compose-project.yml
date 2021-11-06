@@ -1,21 +1,15 @@
 - name: Create project folder
   ansible.builtin.file:
-    path: "{{ item }}"
+    path: "{{ project_folder }}"
     state: directory
     owner: "{{ ansible_facts.user_id }}"
     group: "{{ ansible_facts.user_id }}"
     mode: '0750'
-  with_items:
-    - "{{ folders.project }}"
-    - "{{ folders.config }}"
-    - "{{ folders.data }}"
-    - "{{ folders.downloads }}"
-    - "{{ folders.media }}"
 
 - name: Template docker compose file
   ansible.builtin.template:
     src: ./templates/docker-compose.yml.j2
-    dest: "{{ folders.project }}/docker-compose.yml"
+    dest: "{{ project_folder }}/docker-compose.yml"
     owner: "{{ ansible_facts.user_id }}"
     group: "{{ ansible_facts.user_id }}"
     mode: '0640'
@@ -35,7 +29,16 @@
     - "{{ radarr_volume }}"
     - "{{ overseerr_volume }}"
 
+- name: Create NFS Data share volume
+  community.docker.docker_volume:
+    name: "{{ nfs_data_volume }}"
+    driver: local
+    driver_options:
+      type: nfs
+      o: "addr={{ nfs_data_server }},nolock,noatime,soft,rw"
+      device: ":{{ nfs_data_device }}"
+
 - name: Start docker-compose services
   community.docker.docker_compose:
     project_name: media-server
-    project_src: "{{ folders.project }}"
+    project_src: "{{ project_folder }}"
