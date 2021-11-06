@@ -42,7 +42,7 @@
     
     - name: Configure Jackett
       ansible.builtin.import_tasks: ./tasks/configure-jackett.yml
-      when: jackett.install
+      when: jackett_enable
 
     - name: Configure Sonarr
       ansible.builtin.import_tasks: ./tasks/configure-sonarr.yml

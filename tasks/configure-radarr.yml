@@ -24,7 +24,7 @@
 
 - name: Add jackett to radarr
   ansible.builtin.import_tasks: ./tasks/radarr/enable_jackett.yml
-  when: jackett.install
+  when: jackett_enable
 
 - name: Add qbittorrent to radarr
   ansible.builtin.import_tasks: ./tasks/radarr/enable_qbt.yml

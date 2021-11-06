@@ -30,8 +30,8 @@ acme_env:
 
 qbt_enable: true
 qbt_name: qbittorrent
-qbt_hostname: qbittorrent
-qbt_volume: qbittorrent-data
+qbt_hostname: "{{ qbt_name }}"
+qbt_volume: "{{ qbt_name }}-data"
 qbt_image: lscr.io/linuxserver/qbittorrent
 qbt_version: latest
 qbt_ui_port: 8082
@@ -60,44 +60,50 @@ qbt_categories:
     - name: misc
       path: /downloads/misc
 
-jackett:
-  install: true
-  name: jackett
-  hostname: jackett
-  image: linuxserver/jackett
-  port: 9117
-  apply_dark_theme: true
-  admin_password: changeme
-  server_config:
-    port: 9117
-    external: true
-    updatedisabled: false
-    prerelease: false
-    blackholedir: ''
-    logging: false
-    basepathoverride: ''
-    cache_enabled: true
-    cache_ttl: '7200'
-    cache_max_results_per_indexer: '1000'
-    flaresolverrurl: ''
-    omdbkey: ''
-    omdburl: ''
-    proxy_type: '-1'
-    proxy_url: ''
-    proxy_port: ''
-    proxy_username: ''
-    proxy_password: ''
-  indexer:
-    name: changeme
-    config:
-      - id: sitelink
-        value: https://change.me/
-      - id: username
-        value: changeme
-      - id: passkey
-        value: changeme
-      - id: tags
-        value: ""
+# Jackett
+jackett_enable: true
+jackett_name: jackett
+jackett_hostname: "{{ jackett_name }}"
+jackett_volume: "{{ jackett_name }}-data"
+jackett_image: lscr.io/linuxserver/jackett
+jackett_version: latest
+jackett_port: 9117
+jackett_apply_dark_theme: true
+jackett_admin_password: changeme
+
+###
+# Jackett server config
+jackett_config_port: 9117
+jackett_config_external: true
+jackett_config_updatedisabled: false
+jackett_config_prerelease: false
+jackett_config_blackholedir: ''
+jackett_config_logging: false
+jackett_config_basepathoverride: ''
+jackett_config_cache_enabled: true
+jackett_config_cache_ttl: '7200'
+jackett_config_cache_max_results_per_indexer: '1000'
+jackett_config_flaresolverrurl: ''
+jackett_config_omdbkey: ''
+jackett_config_omdburl: ''
+jackett_config_proxy_type: '-1'
+jackett_config_proxy_url: ''
+jackett_config_proxy_port: ''
+jackett_config_proxy_username: ''
+jackett_config_proxy_password: ''
+
+# Jackett indexer config
+jackett_indexer_name: changeme
+jackett_indexer_config:
+  - id: sitelink
+    value: https://change.me/
+  - id: username
+    value: changeme
+  - id: passkey
+    value: changeme
+  - id: tags
+    value: ""
+###
 
 sonarr:
   install: true

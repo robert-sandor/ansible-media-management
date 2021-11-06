@@ -24,7 +24,7 @@
 
 - name: Add jackett to sonarr
   ansible.builtin.import_tasks: ./tasks/sonarr/enable_jackett.yml
-  when: jackett.install
+  when: jackett_enable
 
 - name: Add qbittorrent to sonarr
   ansible.builtin.import_tasks: ./tasks/sonarr/enable_qbt.yml

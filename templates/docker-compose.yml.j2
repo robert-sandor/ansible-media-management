@@ -86,32 +86,32 @@ services:
       - traefik.http.routers.{{ qbt_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
-{% if jackett.install %}
-  {{ jackett.name }}:
-    container_name: {{ jackett.name }}
-    hostname: {{ jackett.hostname }}
-    image: {{ jackett.image }}
+{% if jackett_enable %}
+  {{ jackett_name }}:
+    container_name: {{ jackett_name }}
+    hostname: {{ jackett_hostname }}
+    image: {{ jackett_image }}:{{ jackett_version }}
     restart: {{ restart_policy }}
     environment:
       - PUID={{ ansible_facts.user_uid }}
       - PGID={{ ansible_facts.user_gid }}
       - TZ={{ timezone }}
-{% if jackett.apply_dark_theme %}
+{% if jackett_apply_dark_theme %}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:jackett
 {% endif %}
     volumes:
-      - {{ folders.config }}/jackett:/config
+      - {{ jackett_volume }}:/config
     networks:
       - {{ network_name }}
     ports:
-      - {{ jackett.port }}:{{ jackett.port }}
+      - {{ jackett_port }}:{{ jackett_port }}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.{{ jackett.name }}.rule=Host(`{{ jackett.hostname }}.{{ domain }}`)
-      - traefik.http.routers.{{ jackett.name }}.entrypoints=websecure
-      - traefik.http.services.{{ jackett.name }}.loadbalancer.server.port={{ jackett.port }}
-      - traefik.http.routers.{{ jackett.name }}.service={{ jackett.name }}
-      - traefik.http.routers.{{ jackett.name }}.tls.certresolver={{ acme_provider }}
+      - traefik.http.routers.{{ jackett_name }}.rule=Host(`jackett_hostname }}.{{ domain }}`)
+      - traefik.http.routers.{{ jackett_name }}.entrypoints=websecure
+      - traefik.http.services.{{ jackett_name }}.loadbalancer.server.port={{ jackett_port }}
+      - traefik.http.routers.{{ jackett_name }}.service={{ jackett_name }}
+      - traefik.http.routers.{{ jackett_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
 {% if sonarr.install %}
@@ -205,4 +205,6 @@ volumes:
   {{ acme_volume }}:
     external: true
   {{ qbt_volume }}:
+    external: true
+  {{ jackett_volume }}:
     external: true

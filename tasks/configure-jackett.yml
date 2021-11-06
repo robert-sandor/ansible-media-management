@@ -1,6 +1,6 @@
 - name: Get jackett cookie
   ansible.builtin.uri:
-    url: "http://localhost:{{ jackett.port }}/UI/Login"
+    url: "http://localhost:{{ jackett_port }}/UI/Login"
     method: GET
   register: auth_response
   retries: 10
@@ -9,10 +9,10 @@
 
 - name: Set jackett indexer config
   ansible.builtin.uri:
-    url: "http://localhost:{{ jackett.port }}/api/v2.0/indexers/{{ jackett.indexer.name }}/config"
+    url: "http://localhost:{{ jackett_port }}/api/v2.0/indexers/{{ jackett_indexer_name }}/config"
     method: POST
     body_format: json
-    body: "{{ jackett.indexer.config }}"
+    body: "{{ jackett_indexer_config }}"
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
     status_code: 204
@@ -23,10 +23,28 @@
 
 - name: Set jackett server config
   ansible.builtin.uri:
-    url: "http://localhost:{{ jackett.port }}/api/v2.0/server/config"
+    url: "http://localhost:{{ jackett_port }}/api/v2.0/server/config"
     method: POST
     body_format: json
-    body: "{{ jackett.server_config }}"
+    body: 
+      port: "{{ jackett_config_port }}"
+      external: "{{ jackett_config_external }}"
+      updatedisabled: "{{ jackett_config_updatedisabled }}"
+      prerelease: "{{ jackett_config_prerelease }}"
+      blackholedir: "{{ jackett_config_blackholedir }}"
+      logging: "{{ jackett_config_logging }}"
+      basepathoverride: "{{ jackett_config_basepathoverride }}"
+      cache_enabled: "{{ jackett_config_cache_enabled }}"
+      cache_ttl: "{{ jackett_config_cache_ttl }}"
+      cache_max_results_per_indexer: "{{ jackett_config_cache_max_results_per_indexer }}"
+      flaresolverrurl: "{{ jackett_config_flaresolverrurl }}"
+      omdbkey: "{{ jackett_config_omdbkey }}"
+      omdburl: "{{ jackett_config_omdburl }}"
+      proxy_type: "{{ jackett_config_proxy_type }}"
+      proxy_url: "{{ jackett_config_proxy_url }}"
+      proxy_port: "{{ jackett_config_proxy_port }}"
+      proxy_username: "{{ jackett_config_proxy_username }}"
+      proxy_password: "{{ jackett_config_proxy_password }}"
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
   register: _response
@@ -36,10 +54,10 @@
 
 - name: Set jackett admin password
   ansible.builtin.uri:
-    url: "http://localhost:{{ jackett.port }}/api/v2.0/server/adminpassword"
+    url: "http://localhost:{{ jackett_port }}/api/v2.0/server/adminpassword"
     method: POST
     body_format: json
-    body: "{{ jackett.admin_password }}"
+    body: "jackett_admin_password }}"
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
     status_code: 204
@@ -56,4 +74,4 @@
 - name: Save jackett facts
   ansible.builtin.set_fact:
     jackett_api_key: "{{ jacket_api_lookup.stdout }}"
-    jackett_torznab_url: "http://jackett:{{ jackett.port }}/api/v2.0/indexers/{{ jackett.indexer.name }}/results/torznab/"
+    jackett_torznab_url: "http://jackett:{{ jackett_port }}/api/v2.0/indexers/{{ jackett_indexer_name }}/results/torznab/"
