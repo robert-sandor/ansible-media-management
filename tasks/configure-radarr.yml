@@ -1,6 +1,6 @@
 - name: Create Movie folder
   ansible.builtin.file:
-    path: "{{ common.folders.media }}/movie"
+    path: "{{ folders.media }}/movie"
     state: directory
     owner: "{{ ansible_facts.user_id }}"
     group: "{{ ansible_facts.user_id }}"
@@ -8,7 +8,7 @@
 
 - name: Get radarr API Key
   ansible.builtin.shell:
-    cmd: "cat {{ common.folders.config }}/radarr/config.xml | grep ApiKey | tr '<' '>' | cut -d '>' -f3"
+    cmd: "cat {{ folders.config }}/radarr/config.xml | grep ApiKey | tr '<' '>' | cut -d '>' -f3"
   register: _response
 
 - name: Save radarr API key

@@ -6,9 +6,11 @@
   ansible.builtin.apt:
     upgrade: dist
 
-- name: Update timezone to {{ common.timezone }}
+- name: Update timezone to {{ timezone }}
   ansible.builtin.timezone:
-    name: "{{ common.timezone }}"
+    name: "{{ timezone }}"
+  register: timezone_result
 
 - name: Reboot host
   ansible.builtin.reboot:
+  when: timezone_result.changed

@@ -12,6 +12,22 @@ common:
     downloads: ~/data/downloads
     media: ~/data/media
 
+# Traefik
+traefik_enable: yes
+traefik_version: v2.5
+traefik_name: traefik
+traefik_image: traefik
+traefik_enable_metrics: yes
+traefik_enable_access_logs: yes
+traefik_metrics_port: 8082
+acme_email: email@example.com
+acme_provider: cloudflare
+acme_volume: acme-data
+acme_testing_mode: yes
+acme_env:
+  CF_API_EMAIL: email@example.com
+  CF_DNS_API_TOKEN: <cloudflare_token>
+
 qbittorrent:
   install: true
   name: qbittorrent

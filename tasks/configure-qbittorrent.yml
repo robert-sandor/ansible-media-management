@@ -40,7 +40,7 @@
 
 - name: Create folders for categories
   ansible.builtin.file:
-    path: "{{ common.folders.data }}/{{ item.path }}"
+    path: "{{ folders.data }}/{{ item.path }}"
     state: directory
     owner: "{{ ansible_facts.user_id }}"
     group: "{{ ansible_facts.user_id }}"
@@ -67,8 +67,7 @@
 - name: Get VueTorrent
   ansible.builtin.git:
     repo: https://github.com/WDaan/VueTorrent.git
-    dest: "{{ common.folders.config }}/qbittorrent/vuetorrent"
-    single_branch: yes
+    dest: "{{ folders.config }}/qbittorrent/vuetorrent"
     version: latest-release
   when: qbittorrent.settings.preferences.alternative_webui_enabled
 

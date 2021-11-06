@@ -50,7 +50,7 @@
 
 - name: Read the ServerConfig file
   ansible.builtin.shell:
-    cmd: "cat {{ common.folders.config }}/jackett/Jackett/ServerConfig.json | grep APIKey | cut -d ':' -f2 | tr -d ' \",\"'"
+    cmd: "cat {{ folders.config }}/jackett/Jackett/ServerConfig.json | grep APIKey | cut -d ':' -f2 | tr -d ' \",\"'"
   register: jacket_api_lookup
 
 - name: Save jackett facts

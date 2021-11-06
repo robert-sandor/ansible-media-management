@@ -89,7 +89,7 @@
         "is4k": false,
         "enableSeasonFolders": true,
         "isDefault": true,
-        "externalUrl": "http://sonarr.{{ common.domain }}",
+        "externalUrl": "http://sonarr.{{ domain }}",
         "syncEnabled": true,
         "preventSearch": false
       }

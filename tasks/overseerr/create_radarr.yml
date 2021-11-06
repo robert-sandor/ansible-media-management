@@ -84,7 +84,7 @@
         "is4k": false,
         "minimumAvailability": "In Cinemas",
         "isDefault": true,
-        "externalUrl": "http://radarr.{{ common.domain }}",
+        "externalUrl": "http://radarr.{{ domain }}",
         "syncEnabled": true,
         "preventSearch": false
       }
