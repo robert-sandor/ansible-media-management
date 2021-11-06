@@ -38,7 +38,7 @@
 
     - name: Configure QBittorrent
       ansible.builtin.import_tasks: ./tasks/configure-qbittorrent.yml
-      when: qbittorrent.install
+      when: qbt_enable
     
     - name: Configure Jackett
       ansible.builtin.import_tasks: ./tasks/configure-jackett.yml

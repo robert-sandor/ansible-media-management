@@ -1,13 +1,13 @@
 - name: Authenticate with qbittorrent using default credentials
   ansible.builtin.uri:
-    url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/auth/login"
+    url: "http://localhost:{{ qbt_ui_port }}/api/v2/auth/login"
     method: POST
     body_format: form-urlencoded
     body:
-      username: "{{ qbittorrent.default_username }}"
-      password: "{{ qbittorrent.default_password }}"
+      username: "{{ qbt_default_username }}"
+      password: "{{ qbt_default_password }}"
     headers:
-      Referer: "http://localhost:{{ qbittorrent.ui_port }}"
+      Referer: "http://localhost:{{ qbt_ui_port }}"
   register: _response
   retries: 10
   delay: 10
@@ -19,14 +19,14 @@
 
 - name: Authenticate with qbittorrent using changed credentials
   ansible.builtin.uri:
-    url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/auth/login"
+    url: "http://localhost:{{ qbt_ui_port }}/api/v2/auth/login"
     method: POST
     body_format: form-urlencoded
     body:
-      username: "{{ qbittorrent.settings.preferences.web_ui_username }}"
-      password: "{{ qbittorrent.settings.preferences.web_ui_password }}"
+      username: "{{ qbt_web_ui_username }}"
+      password: "{{ qbt_web_ui_password }}"
     headers:
-      Referer: "http://localhost:{{ qbittorrent.ui_port }}"
+      Referer: "http://localhost:{{ qbt_ui_port }}"
   register: _response
   when: qbt_cookie == ""
   retries: 10
@@ -45,11 +45,11 @@
     owner: "{{ ansible_facts.user_id }}"
     group: "{{ ansible_facts.user_id }}"
     mode: '0750'
-  with_items: "{{ qbittorrent.settings.categories }}"
+  with_items: "{{ qbt_categories }}"
 
 - name: Attempt to create categories in qbittorrent
   ansible.builtin.uri:
-    url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/torrents/createCategory"
+    url: "http://localhost:{{ qbt_ui_port }}/api/v2/torrents/createCategory"
     method: POST
     body_format: form-urlencoded
     body:
@@ -58,26 +58,39 @@
     headers:
       Cookie: "{{ qbt_cookie }}"
     status_code: 200, 409
-  with_items: "{{ qbittorrent.settings.categories }}"
+  with_items: "{{ qbt_categories }}"
   register: _response
   retries: 10
   delay: 10
   until: _response.status != -1 
 
-- name: Get VueTorrent
-  ansible.builtin.git:
-    repo: https://github.com/WDaan/VueTorrent.git
-    dest: "{{ folders.config }}/qbittorrent/vuetorrent"
-    version: latest-release
-  when: qbittorrent.settings.preferences.alternative_webui_enabled
+- name: Get alternaltive web UI for qbittorrent
+  ansible.builtin.import_tasks: ./tasks/qbittorrent/get-vuetorrent.yml
+  when: qbt_alternative_webui_enabled
+
+- name: Create qbt preferences request body
+  ansible.builtin.set_fact:
+    qbt_pref:
+      save_path: "{{ qbt_save_path }}"
+      max_active_downloads: "{{ qbt_max_active_downloads }}"
+      max_active_torrents: "{{ qbt_max_active_torrents }}"
+      max_active_uploads: "{{ qbt_max_active_uploads }}"
+      alt_dl_limit: "{{ qbt_alt_dl_limit }}"
+      alt_up_limit: "{{ qbt_alt_up_limit }}"
+      web_ui_username: "{{ qbt_web_ui_username }}"
+      web_ui_password: "{{ qbt_web_ui_password }}"
+      bypass_auth_subnet_whitelist_enabled: "{{ qbt_bypass_auth_subnet_whitelist_enabled }}"
+      bypass_auth_subnet_whitelist: "{{ qbt_bypass_auth_subnet_whitelist }}"
+      alternative_webui_enabled: "{{ qbt_alternative_webui_enabled }}"
+      alternative_webui_path: "{{ qbt_alternative_webui_path }}"
 
 - name: Set preferences in qbittorrent
   ansible.builtin.uri:
-    url: "http://localhost:{{ qbittorrent.ui_port }}/api/v2/app/setPreferences"
+    url: "http://localhost:{{ qbt_ui_port }}/api/v2/app/setPreferences"
     method: POST
     body_format: form-urlencoded
     body:
-      json: "{{ qbittorrent.settings.preferences | to_json }}"
+      json: "{{ qbt_pref | to_json }}"
     headers:
       Cookie: "{{ qbt_cookie }}"
     status_code: 200

@@ -57,33 +57,33 @@ services:
     restart: {{ restart_policy }}
 
 {% endif %}
-{% if qbittorrent.install %}
-  {{ qbittorrent.name }}:
-    container_name: {{ qbittorrent.name }}
-    hostname: {{ qbittorrent.hostname }}
-    image: {{ qbittorrent.image }}
+{% if qbt_enable %}
+  {{ qbt_name }}:
+    container_name: {{ qbt_name }}
+    hostname: {{ qbt_hostname }}
+    image: {{ qbt_image }}:{{ qbt_version }}
     restart: {{ restart_policy }}
     environment:
       - PUID={{ ansible_facts.user_uid }}
       - PGID={{ ansible_facts.user_gid }}
       - TZ={{ timezone }}
-      - WEBUI_PORT={{ qbittorrent.ui_port }}
+      - WEBUI_PORT={{ qbt_ui_port }}
     volumes:
-      - {{ folders.config }}/qbittorrent:/config
+      - {{ qbt_volume }}:/config
       - {{ folders.downloads }}:/downloads
     networks:
       - {{ network_name }}
     ports:
-      - {{ qbittorrent.torrent_port }}:{{ qbittorrent.torrent_port }}
-      - {{ qbittorrent.torrent_port }}:{{ qbittorrent.torrent_port }}/udp
-      - {{ qbittorrent.ui_port }}:{{ qbittorrent.ui_port }}
+      - {{ qbt_torrent_port }}:{{ qbt_torrent_port }}
+      - {{ qbt_torrent_port }}:{{ qbt_torrent_port }}/udp
+      - {{ qbt_ui_port }}:{{ qbt_ui_port }}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.{{ qbittorrent.name }}.rule=Host(`{{ qbittorrent.hostname }}.{{ domain }}`)
-      - traefik.http.routers.{{ qbittorrent.name }}.entrypoints=websecure
-      - traefik.http.services.{{ qbittorrent.name }}.loadbalancer.server.port={{ qbittorrent.ui_port }}
-      - traefik.http.routers.{{ qbittorrent.name }}.service={{ qbittorrent.name }}
-      - traefik.http.routers.{{ qbittorrent.name }}.tls.certresolver={{ acme_provider }}
+      - traefik.http.routers.{{ qbt_name }}.rule=Host(`{{ qbt_hostname }}.{{ domain }}`)
+      - traefik.http.routers.{{ qbt_name }}.entrypoints=websecure
+      - traefik.http.services.{{ qbt_name }}.loadbalancer.server.port={{ qbt_ui_port }}
+      - traefik.http.routers.{{ qbt_name }}.service={{ qbt_name }}
+      - traefik.http.routers.{{ qbt_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
 {% if jackett.install %}
@@ -203,4 +203,6 @@ networks:
 
 volumes:
   {{ acme_volume }}:
+    external: true
+  {{ qbt_volume }}:
     external: true

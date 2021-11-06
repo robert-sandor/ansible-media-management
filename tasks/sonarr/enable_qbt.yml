@@ -27,14 +27,14 @@
         - name: host
           value: qbittorrent
         - name: port
-          value: '{{ qbittorrent.ui_port }}'
+          value: '{{ qbt_ui_port }}'
         - name: useSsl
           value: false
         - name: urlBase
         - name: username
-          value: "{{ qbittorrent.settings.preferences.web_ui_username }}"
+          value: "{{ qbt_preferences.web_ui_username }}"
         - name: password
-          value: "{{ qbittorrent.settings.preferences.web_ui_password }}"
+          value: "{{ qbt_preferences.web_ui_password }}"
         - name: tvCategory
           value: "{{ sonarr.settings.qbt_category }}"
         - name: tvImportedCategory

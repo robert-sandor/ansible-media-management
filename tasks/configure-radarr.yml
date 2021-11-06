@@ -28,4 +28,4 @@
 
 - name: Add qbittorrent to radarr
   ansible.builtin.import_tasks: ./tasks/radarr/enable_qbt.yml
-  when: qbittorrent.install
+  when: qbt_enable

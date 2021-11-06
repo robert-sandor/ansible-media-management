@@ -1,0 +1,18 @@
+- name: Get qbittorrent volume info
+  community.docker.docker_volume_info:
+    name: "{{ qbt_volume }}"
+  register: _result
+
+- name: Get qbittorrent volume path
+  ansible.builtin.set_fact:
+    qbt_volume_path: "{{ _result.volume.Mountpoint }}"
+  when: _result.exists
+
+- name: Get VueTorrent
+  become: yes
+  ansible.builtin.git:
+    repo: https://github.com/WDaan/VueTorrent.git
+    dest: "{{ qbt_volume_path }}/vuetorrent"
+    version: latest-release
+  when: _result.exists
+  

@@ -18,7 +18,7 @@ traefik_version: v2.5
 traefik_name: traefik
 traefik_image: traefik
 traefik_enable_metrics: yes
-traefik_enable_access_logs: yes
+traefik_enable_access_logs: no
 traefik_metrics_port: 8082
 acme_email: email@example.com
 acme_provider: cloudflare
@@ -28,38 +28,37 @@ acme_env:
   CF_API_EMAIL: email@example.com
   CF_DNS_API_TOKEN: <cloudflare_token>
 
-qbittorrent:
-  install: true
-  name: qbittorrent
-  hostname: qbittorrent
-  image: linuxserver/qbittorrent
-  ui_port: 8082
-  torrent_port: 6881
-  default_username: admin
-  default_password: adminadmin
-  settings:
-    preferences:
-      save_path: /downloads
-      max_active_downloads: 50
-      max_active_torrents: 50
-      max_active_uploads: 50
-      alt_dl_limit: 5242880
-      alt_up_limit: 5242880
-      web_ui_username: admin
-      web_ui_password: changeme
-      bypass_auth_subnet_whitelist_enabled: false
-      bypass_auth_subnet_whitelist: "192.168.0.0/16"
-      alternative_webui_enabled: true
-      alternative_webui_path: "/config/vuetorrent"
-    categories:
-      - name: movie
-        path: /downloads/movie
-      - name: tv
-        path: /downloads/tv
-      - name: iso
-        path: /downloads/iso
-      - name: misc
-        path: /downloads/misc
+qbt_enable: true
+qbt_name: qbittorrent
+qbt_hostname: qbittorrent
+qbt_volume: qbittorrent-data
+qbt_image: lscr.io/linuxserver/qbittorrent
+qbt_version: latest
+qbt_ui_port: 8082
+qbt_torrent_port: 6881
+qbt_default_username: admin
+qbt_default_password: adminadmin
+qbt_save_path: /downloads
+qbt_max_active_downloads: 50
+qbt_max_active_torrents: 50
+qbt_max_active_uploads: 50
+qbt_alt_dl_limit: 5242880
+qbt_alt_up_limit: 5242880
+qbt_web_ui_username: admin
+qbt_web_ui_password: changeme
+qbt_bypass_auth_subnet_whitelist_enabled: no
+qbt_bypass_auth_subnet_whitelist: "192.168.0.0/16"
+qbt_alternative_webui_enabled: no
+qbt_alternative_webui_path: "/config/vuetorrent"
+qbt_categories:
+    - name: movie
+      path: /downloads/movie
+    - name: tv
+      path: /downloads/tv
+    - name: iso
+      path: /downloads/iso
+    - name: misc
+      path: /downloads/misc
 
 jackett:
   install: true
