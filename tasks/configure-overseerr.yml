@@ -1,6 +1,6 @@
 - name: Set overseerr_api variable
   ansible.builtin.set_fact:
-    overseerr_api: "http://localhost:{{ overseerr.port }}/api/v1"
+    overseerr_api: "http://localhost:{{ overseerr_port }}/api/v1"
 
 - name: Sign in to Overseerr using Plex Auth token
   ansible.builtin.uri:
@@ -8,7 +8,7 @@
     method: POST
     body_format: json
     body:
-      authToken: "{{ overseerr.settings.plex_auth_token }}"
+      authToken: "{{ overseerr_plex_auth_token }}"
   register: _response
   retries: 10
   delay: 10
@@ -27,8 +27,8 @@
       Cookie: "connect.sid={{ overseerr_cookie }}"
     body: |
       {
-        "ip": "{{ overseerr.settings.plex_ip }}", 
-        "port": {{ overseerr.settings.plex_port }}, 
+        "ip": "{{ overseerr_plex_ip }}", 
+        "port": {{ overseerr_plex_port }}, 
         "webAppUrl": "https://app.plex.tv/desktop"
       }
   register: _response
@@ -38,8 +38,8 @@
 
 - name: Create Sonarr
   ansible.builtin.import_tasks: ./tasks/overseerr/create_sonarr.yml
-  when: sonarr.install
+  when: sonarr_enable
 
 - name: Create Radarr
   ansible.builtin.import_tasks: ./tasks/overseerr/create_radarr.yml
-  when: radarr.install
+  when: radarr_enable

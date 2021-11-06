@@ -6,9 +6,20 @@
     group: "{{ ansible_facts.user_id }}"
     mode: '0750'
 
+- name: Get radarr volume info
+  community.docker.docker_volume_info:
+    name: "{{ radarr_volume }}"
+  register: _result
+
+- name: Get radarr volume path
+  ansible.builtin.set_fact:
+    radarr_volume_path: "{{ _result.volume.Mountpoint }}"
+  when: _result.exists
+
 - name: Get radarr API Key
+  become: yes
   ansible.builtin.shell:
-    cmd: "cat {{ folders.config }}/radarr/config.xml | grep ApiKey | tr '<' '>' | cut -d '>' -f3"
+    cmd: "cat {{ radarr_volume_path }}/config.xml | grep ApiKey | tr '<' '>' | cut -d '>' -f3"
   register: _response
 
 - name: Save radarr API key
@@ -17,7 +28,7 @@
 
 - name: Set radarr API URL
   ansible.builtin.set_fact:
-    radarr_api_url: "http://localhost:{{radarr.port}}/api/v3"
+    radarr_api_url: "http://localhost:{{ radarr_port }}/api/v3"
 
 - name: Add jackett to radarr
   ansible.builtin.import_tasks: ./tasks/radarr/set_rootfolder.yml

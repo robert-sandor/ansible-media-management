@@ -13,7 +13,7 @@
   ansible.builtin.set_fact:
     existing_sonarr_ids: "{{ _response.json | json_query(q) }}"
   vars:
-    q: "[?hostname == `sonarr` && port == `{{ sonarr.port }}`].id"
+    q: "[?hostname == `sonarr` && port == `{{ sonarr_port }}`].id"
 
 - name: Save existing sonarr ID and state
   ansible.builtin.set_fact:
@@ -30,7 +30,7 @@
     body: |
       {
         "hostname": "sonarr",
-        "port": {{ sonarr.port }},
+        "port": {{ sonarr_port }},
         "apiKey": "{{ sonarr_api_key }}",
         "useSsl": false,
         "baseUrl": ""
@@ -44,13 +44,13 @@
   ansible.builtin.set_fact:
     sonarr_test_response: "{{ _response.json }}"
 
-- name: Find ID of profile {{ overseerr.settings.sonarr.profile_name }}
+- name: Find ID of profile {{ overseerr_sonarr_profile_name }}
   ansible.builtin.set_fact:
     sonarr_profile_ids: "{{ sonarr_test_response | json_query(profile_query) }}"
     sonarr_language_profile_ids: "{{ sonarr_test_response | json_query(language_profile_query) }}"
   vars: 
-    profile_query: "profiles[?name == `{{ overseerr.settings.sonarr.profile_name }}`].id"
-    language_profile_query: "languageProfiles[?name == `{{ overseerr.settings.sonarr.language_profile_name }}`].id"
+    profile_query: "profiles[?name == `{{ overseerr_sonarr_profile_name }}`].id"
+    language_profile_query: "languageProfiles[?name == `{{ overseerr_sonarr_language_profile_name }}`].id"
 
 - name: Check that profiles exist and set to default if they don't
   ansible.builtin.set_fact:
@@ -74,18 +74,18 @@
       {
         "name": "sonarr",
         "hostname": "sonarr",
-        "port": {{ sonarr.port }},
+        "port": {{ sonarr_port }},
         "apiKey": "{{ sonarr_api_key }}",
         "useSsl": false,
         "baseUrl": "",
         "activeProfileId": {{ sonarr_profile_id }},
         "activeProfileName": "{{ sonarr_profile_name[0] }}",
-        "activeDirectory": "{{ sonarr.settings.root_folder }}",
+        "activeDirectory": "{{ sonarr_root_folder }}",
         "activeLanguageProfileId": {{ sonarr_language_profile_id }},
         "activeAnimeProfileId": {{ sonarr_profile_id }},
         "activeAnimeLanguageProfileId": {{ sonarr_language_profile_id }},
         "activeAnimeProfileName": "{{ sonarr_profile_name[0] }}",
-        "activeAnimeDirectory": "{{ sonarr.settings.root_folder }}",
+        "activeAnimeDirectory": "{{ sonarr_root_folder }}",
         "is4k": false,
         "enableSeasonFolders": true,
         "isDefault": true,

@@ -17,7 +17,7 @@
     method: POST
     body_format: json
     body:
-      path: "{{ radarr.settings.root_folder }}"
+      path: "{{ radarr_root_folder }}"
     status_code: 201
   when: rootpath_not_set
   register: _response

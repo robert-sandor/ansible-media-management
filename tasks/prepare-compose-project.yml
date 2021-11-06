@@ -31,6 +31,9 @@
     - "{{ acme_volume }}"
     - "{{ qbt_volume }}"
     - "{{ jackett_volume }}"
+    - "{{ sonarr_volume }}"
+    - "{{ radarr_volume }}"
+    - "{{ overseerr_volume }}"
 
 - name: Start docker-compose services
   community.docker.docker_compose:

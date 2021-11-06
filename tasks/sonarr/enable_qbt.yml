@@ -11,9 +11,13 @@
   set_fact:
     qbt_not_configured: "{{ _response.json | json_query('[?name == `qbittorrent`]') | length() == 0 }}"
 
+- name: debug
+  debug:
+    var: qbt_web_ui_username
+
 - name: Add qbittorrent download client
   uri:
-    url: "{{ sonarr_api_url }}/downloadclient?apiKey={{sonarr_api_key}}"
+    url: "{{ sonarr_api_url }}/downloadclient?apiKey={{ sonarr_api_key }}"
     method: POST
     body_format: json
     body:
@@ -32,11 +36,11 @@
           value: false
         - name: urlBase
         - name: username
-          value: "{{ qbt_preferences.web_ui_username }}"
+          value: "{{ qbt_web_ui_username }}"
         - name: password
-          value: "{{ qbt_preferences.web_ui_password }}"
+          value: "{{ qbt_web_ui_password }}"
         - name: tvCategory
-          value: "{{ sonarr.settings.qbt_category }}"
+          value: "{{ sonarr_qbt_category }}"
         - name: tvImportedCategory
         - name: recentTvPriority
           value: 0
@@ -58,13 +62,13 @@
 
 - name: Add qbittorrent remote mapping
   uri:
-    url: "{{ sonarr_api_url }}/remotepathmapping?apiKey={{sonarr_api_key}}"
+    url: "{{ sonarr_api_url }}/remotepathmapping?apiKey={{ sonarr_api_key }}"
     method: POST
     body_format: json
     body:
       host: qbittorrent
-      remotePath: "{{ sonarr.settings.remote_path_qbt }}"
-      localPath: "/data{{ sonarr.settings.remote_path_qbt }}"
+      remotePath: "{{ sonarr_remote_path_qbt }}"
+      localPath: "/data{{ sonarr_remote_path_qbt }}"
     status_code: 201
   when: qbt_not_configured
   register: _response

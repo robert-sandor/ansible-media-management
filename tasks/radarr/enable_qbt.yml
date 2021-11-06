@@ -33,11 +33,11 @@
           value: false
         - name: urlBase
         - name: username
-          value: "{{ qbt_preferences.web_ui_username }}"
+          value: "{{ qbt_web_ui_username }}"
         - name: password
-          value: "{{ qbt_preferences.web_ui_password }}"
+          value: "{{ qbt_web_ui_password }}"
         - name: movieCategory
-          value: "{{ radarr.settings.qbt_category }}"
+          value: "{{ radarr_qbt_category }}"
         - name: movieImportedCategory
         - name: recentMoviePriority
           value: 0
@@ -64,8 +64,8 @@
     body_format: json
     body:
       host: qbittorrent
-      remotePath: "{{ radarr.settings.remote_path_qbt }}"
-      localPath: "/data{{ radarr.settings.remote_path_qbt }}"
+      remotePath: "{{ radarr_remote_path_qbt }}"
+      localPath: "/data{{ radarr_remote_path_qbt }}"
     status_code: 201
   when: qbt_not_configured
   register: _response

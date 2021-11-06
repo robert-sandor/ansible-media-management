@@ -109,48 +109,46 @@ jackett_indexer_config:
     value: ""
 ###
 
-sonarr:
-  install: true
-  name: sonarr
-  hostname: sonarr
-  image: linuxserver/sonarr
-  port: 8989
-  apply_dark_theme: true
-  settings:
-    indexer_categories: [ ]
-    minimum_seeders: 5
-    qbt_category: tv
-    root_folder: /data/media/tv
-    remote_path_qbt: /downloads/tv # should match the tv category path from qbittorrent settings
+sonarr_enable: true
+sonarr_name: sonarr
+sonarr_hostname: "{{ sonarr_name }}"
+sonarr_volume: "{{ sonarr_name }}-data"
+sonarr_image: lscr.io/linuxserver/sonarr
+sonarr_version: latest
+sonarr_port: 8989
+sonarr_apply_dark_theme: yes
+sonarr_indexer_categories: [ ]
+sonarr_minimum_seeders: 5
+sonarr_qbt_category: tv
+sonarr_root_folder: /data/media/tv
+sonarr_remote_path_qbt: /downloads/tv # should match the tv category path from qbittorrent settings
 
-radarr:
-  install: true
-  name: radarr
-  hostname: radarr
-  image: linuxserver/radarr
-  port: 7878
-  apply_dark_theme: true
-  settings:
-    indexer_categories: [ ]
-    minimum_seeders: 5
-    qbt_category: movie
-    root_folder: /data/media/movie
-    remote_path_qbt: /downloads/movie # should match the movie category path from qbittorrent settings
+radarr_enable: true
+radarr_name: radarr
+radarr_hostname: "{{ radarr_name }}"
+radarr_volume: "{{ radarr_name }}-data"
+radarr_image: lscr.io/linuxserver/radarr
+radarr_version: latest
+radarr_port: 7878
+radarr_apply_dark_theme: yes
+radarr_indexer_categories: [ ]
+radarr_minimum_seeders: 5
+radarr_qbt_category: movie
+radarr_root_folder: /data/media/movie
+radarr_remote_path_qbt: /downloads/movie # should match the movie category path from qbittorrent settings
 
-overseerr:
-  install: true
-  name: overseerr
-  hostname: overseerr
-  image: linuxserver/overseerr
-  port: 5055
-  settings:
-    plex_auth_token: changeme # Plex auth token, to get it follow https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
-    plex_ip: 192.168.1.1      # IP address of the plex server running locally
-    plex_port: 32400          # Port of the Plex server, usually 32400
-    sonarr:
-      profile_name: "HD-1080p"
-      language_profile_name: "English"
-    radarr:
-      profile_name: "HD-1080p"
-      language_profile_name: "English"
+overseerr_enable: true
+overseerr_name: overseerr
+overseerr_hostname: "{{ overseerr_name }}"
+overseerr_volume: "{{ overseerr_name }}-data"
+overseerr_image: lscr.io/linuxserver/overseerr
+overseerr_version: latest
+overseerr_port: 5055
+overseerr_plex_auth_token: changeme # Plex auth token, to get it follow https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
+overseerr_plex_ip: 192.168.1.1      # IP address of the plex server running locally
+overseerr_plex_port: 32400          # Port of the Plex server, usually 32400
+overseerr_sonarr_profile_name: "HD-1080p"
+overseerr_sonarr_language_profile_name: "English"
+overseerr_radarr_profile_name: "HD-1080p"
+overseerr_radarr_language_profile_name: "English"
     

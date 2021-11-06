@@ -13,7 +13,7 @@
   ansible.builtin.set_fact:
     existing_radarr_ids: "{{ _response.json | json_query(q) }}"
   vars:
-    q: "[?hostname == `radarr` && port == `{{ radarr.port }}`].id"
+    q: "[?hostname == `radarr` && port == `{{ radarr_port }}`].id"
 
 - name: Save existing radarr ID and state
   ansible.builtin.set_fact:
@@ -30,7 +30,7 @@
     body: |
       {
         "hostname": "radarr",
-        "port": {{ radarr.port }},
+        "port": {{ radarr_port }},
         "apiKey": "{{ radarr_api_key }}",
         "useSsl": false,
         "baseUrl": ""
@@ -44,13 +44,13 @@
   ansible.builtin.set_fact:
     radarr_test_response: "{{ _response.json }}"
 
-- name: Find ID of profile {{ overseerr.settings.radarr.profile_name }}
+- name: Find ID of profile {{ overseerr_radarr_profile_name }}
   ansible.builtin.set_fact:
     radarr_profile_ids: "{{ radarr_test_response | json_query(profile_query) }}"
     radarr_language_profile_ids: "{{ radarr_test_response | json_query(language_profile_query) }}"
   vars: 
-    profile_query: "profiles[?name == `{{ overseerr.settings.radarr.profile_name }}`].id"
-    language_profile_query: "languageProfiles[?name == `{{ overseerr.settings.radarr.language_profile_name }}`].id"
+    profile_query: "profiles[?name == `{{ overseerr_radarr_profile_name }}`].id"
+    language_profile_query: "languageProfiles[?name == `{{ overseerr_radarr_language_profile_name }}`].id"
 
 - name: Check that profiles exist and set to default if they don't
   ansible.builtin.set_fact:
@@ -74,13 +74,13 @@
       {
         "name": "radarr",
         "hostname": "radarr",
-        "port": {{ radarr.port }},
+        "port": {{ radarr_port }},
         "apiKey": "{{ radarr_api_key }}",
         "useSsl": false,
         "baseUrl": "",
         "activeProfileId": {{ radarr_profile_id }},
         "activeProfileName": "{{ radarr_profile_name[0] }}",
-        "activeDirectory": "{{ radarr.settings.root_folder }}",
+        "activeDirectory": "{{ radarr_root_folder }}",
         "is4k": false,
         "minimumAvailability": "In Cinemas",
         "isDefault": true,

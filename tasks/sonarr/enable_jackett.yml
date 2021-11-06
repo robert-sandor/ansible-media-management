@@ -1,6 +1,6 @@
 - name: Get sonarr indexers
   uri:
-    url: "{{ sonarr_api_url }}/indexer?apiKey={{sonarr_api_key}}"
+    url: "{{ sonarr_api_url }}/indexer?apiKey={{ sonarr_api_key }}"
     follow_redirects: none
     method: GET
   register: _response
@@ -14,7 +14,7 @@
 
 - name: Configure jackett as indexer
   ansible.builtin.uri:
-    url: "{{ sonarr_api_url }}/indexer?apiKey={{sonarr_api_key}}"
+    url: "{{ sonarr_api_url }}/indexer?apiKey={{ sonarr_api_key }}"
     method: POST
     body_format: json
     body:
@@ -34,11 +34,11 @@
         - name: apiKey
           value: '{{ jackett_api_key }}'
         - name: categories
-          value: "{{ sonarr.settings.indexer_categories }}"
+          value: "{{ sonarr_indexer_categories }}"
         - name: animeCategories
-          value: "{{ sonarr.settings.indexer_categories }}"
+          value: "{{ sonarr_indexer_categories }}"
         - name: minimumSeeders
-          value: "{{ sonarr.settings.minimum_seeders }}"
+          value: "{{ sonarr_minimum_seeders }}"
         - name: seedCriteria.seedRatio
         - name: seedCriteria.seedTime
         - name: seedCriteria.seasonPackSeedTime

@@ -36,9 +36,9 @@
         - name: apiKey
           value: '{{ jackett_api_key }}'
         - name: categories
-          value: "{{ radarr.settings.indexer_categories }}"
+          value: "{{ radarr_indexer_categories }}"
         - name: minimumSeeders
-          value: "{{ radarr.settings.minimum_seeders }}"
+          value: "{{ radarr_minimum_seeders }}"
         - name: seedCriteria.seedRatio
         - name: seedCriteria.seedTime
         - name: additionalParameters

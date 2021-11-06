@@ -107,94 +107,94 @@ services:
       - {{ jackett_port }}:{{ jackett_port }}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.{{ jackett_name }}.rule=Host(`jackett_hostname }}.{{ domain }}`)
+      - traefik.http.routers.{{ jackett_name }}.rule=Host(`{{ jackett_hostname }}.{{ domain }}`)
       - traefik.http.routers.{{ jackett_name }}.entrypoints=websecure
       - traefik.http.services.{{ jackett_name }}.loadbalancer.server.port={{ jackett_port }}
       - traefik.http.routers.{{ jackett_name }}.service={{ jackett_name }}
       - traefik.http.routers.{{ jackett_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
-{% if sonarr.install %}
-  {{ sonarr.name }}:
-    container_name: {{ sonarr.name }}
-    hostname: {{ sonarr.hostname }}
-    image: {{ sonarr.image }}
+{% if sonarr_enable %}
+  {{ sonarr_name }}:
+    container_name: {{ sonarr_name }}
+    hostname: {{ sonarr_hostname }}
+    image: {{ sonarr_image }}:{{ sonarr_version }}
     restart: {{ restart_policy }}
     environment:
       - PUID={{ ansible_facts.user_uid }}
       - PGID={{ ansible_facts.user_gid }}
       - TZ={{ timezone }}
-{% if sonarr.apply_dark_theme %}
+{% if sonarr_apply_dark_theme %}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:sonarr
 {% endif %}
     volumes:
-      - {{ folders.config }}/sonarr:/config
+      - {{ sonarr_volume }}:/config
       - {{ folders.data }}:/data
     networks:
       - {{ network_name }}
     ports:
-      - {{ sonarr.port }}:{{ sonarr.port }}
+      - {{ sonarr_port }}:{{ sonarr_port }}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.{{ sonarr.name }}.rule=Host(`{{ sonarr.hostname }}.{{ domain }}`)
-      - traefik.http.routers.{{ sonarr.name }}.entrypoints=websecure
-      - traefik.http.services.{{ sonarr.name }}.loadbalancer.server.port={{ sonarr.port }}
-      - traefik.http.routers.{{ sonarr.name }}.service={{ sonarr.name }}
-      - traefik.http.routers.{{ sonarr.name }}.tls.certresolver={{ acme_provider }}
+      - traefik.http.routers.{{ sonarr_name }}.rule=Host(`{{ sonarr_hostname }}.{{ domain }}`)
+      - traefik.http.routers.{{ sonarr_name }}.entrypoints=websecure
+      - traefik.http.services.{{ sonarr_name }}.loadbalancer.server.port={{ sonarr_port }}
+      - traefik.http.routers.{{ sonarr_name }}.service={{ sonarr_name }}
+      - traefik.http.routers.{{ sonarr_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
-{% if radarr.install %}
-  {{ radarr.name }}:
-    container_name: {{ radarr.name }}
-    hostname: {{ radarr.hostname }}
-    image: {{ radarr.image }}
+{% if radarr_enable %}
+  {{ radarr_name }}:
+    container_name: {{ radarr_name }}
+    hostname: {{ radarr_hostname }}
+    image: {{ radarr_image }}:{{ radarr_version }}
     restart: {{ restart_policy }}
     environment:
       - PUID={{ ansible_facts.user_uid }}
       - PGID={{ ansible_facts.user_gid }}
       - TZ={{ timezone }}
-{% if radarr.apply_dark_theme %}
+{% if radarr_apply_dark_theme %}
       - DOCKER_MODS=ghcr.io/gilbn/theme.park:radarr
 {% endif %}
     volumes:
-      - {{ folders.config }}/radarr:/config
+      - {{ radarr_volume }}:/config
       - {{ folders.data }}:/data
     networks:
       - {{ network_name }}
     ports:
-      - {{ radarr.port }}:{{ radarr.port }}
+      - {{ radarr_port }}:{{ radarr_port }}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.{{ radarr.name }}.rule=Host(`{{ radarr.hostname }}.{{ domain }}`)
-      - traefik.http.routers.{{ radarr.name }}.entrypoints=websecure
-      - traefik.http.services.{{ radarr.name }}.loadbalancer.server.port={{ radarr.port }}
-      - traefik.http.routers.{{ radarr.name }}.service={{ radarr.name }}
-      - traefik.http.routers.{{ radarr.name }}.tls.certresolver={{ acme_provider }}
+      - traefik.http.routers.{{ radarr_name }}.rule=Host(`{{ radarr_hostname }}.{{ domain }}`)
+      - traefik.http.routers.{{ radarr_name }}.entrypoints=websecure
+      - traefik.http.services.{{ radarr_name }}.loadbalancer.server.port={{ radarr_port }}
+      - traefik.http.routers.{{ radarr_name }}.service={{ radarr_name }}
+      - traefik.http.routers.{{ radarr_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
-{% if overseerr.install %}
-  {{ overseerr.name }}:
-    container_name: {{ overseerr.name }}
-    hostname: {{ overseerr.hostname }}
-    image: {{ overseerr.image }}
+{% if overseerr_enable %}
+  {{ overseerr_name }}:
+    container_name: {{ overseerr_name }}
+    hostname: {{ overseerr_hostname }}
+    image: {{ overseerr_image }}
     restart: {{ restart_policy }}
     environment:
       - PUID={{ ansible_facts.user_uid }}
       - PGID={{ ansible_facts.user_gid }}
       - TZ={{ timezone }}
     volumes:
-      - {{ folders.config }}/overseerr:/config
+      - {{ overseerr_volume }}:/config
     networks:
       - {{ network_name }}
     ports:
-      - {{ overseerr.port }}:{{ overseerr.port }}
+      - {{ overseerr_port }}:{{ overseerr_port }}
     labels:
       - traefik.enable=true
-      - traefik.http.routers.{{ overseerr.name }}.rule=Host(`{{ overseerr.hostname }}.{{ domain }}`)
-      - traefik.http.routers.{{ overseerr.name }}.entrypoints=websecure
-      - traefik.http.services.{{ overseerr.name }}.loadbalancer.server.port={{ overseerr.port }}
-      - traefik.http.routers.{{ overseerr.name }}.service={{ overseerr.name }}
-      - traefik.http.routers.{{ overseerr.name }}.tls.certresolver={{ acme_provider }}
+      - traefik.http.routers.{{ overseerr_name }}.rule=Host(`{{ overseerr_hostname }}.{{ domain }}`)
+      - traefik.http.routers.{{ overseerr_name }}.entrypoints=websecure
+      - traefik.http.services.{{ overseerr_name }}.loadbalancer.server.port={{ overseerr_port }}
+      - traefik.http.routers.{{ overseerr_name }}.service={{ overseerr_name }}
+      - traefik.http.routers.{{ overseerr_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
 networks:
@@ -207,4 +207,10 @@ volumes:
   {{ qbt_volume }}:
     external: true
   {{ jackett_volume }}:
+    external: true
+  {{ sonarr_volume }}:
+    external: true
+  {{ radarr_volume }}:
+    external: true
+  {{ overseerr_volume }}:
     external: true

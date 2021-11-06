@@ -66,9 +66,20 @@
   delay: 10
   until: _response.status != -1
 
+- name: Get jackett volume info
+  community.docker.docker_volume_info:
+    name: "{{ jackett_volume }}"
+  register: _result
+
+- name: Get jackett volume path
+  ansible.builtin.set_fact:
+    jackett_volume_path: "{{ _result.volume.Mountpoint }}"
+  when: _result.exists
+
 - name: Read the ServerConfig file
+  become: yes
   ansible.builtin.shell:
-    cmd: "cat {{ folders.config }}/jackett/Jackett/ServerConfig.json | grep APIKey | cut -d ':' -f2 | tr -d ' \",\"'"
+    cmd: "cat {{ jackett_volume_path }}/Jackett/ServerConfig.json | grep APIKey | cut -d ':' -f2 | tr -d ' \",\"'"
   register: jacket_api_lookup
 
 - name: Save jackett facts

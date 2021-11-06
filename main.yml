@@ -9,25 +9,25 @@
     - ./vars.default.yml
     - ./vars.yml
 
-  pre_tasks:
-    - name: Setup and update host
-      ansible.builtin.import_tasks: ./tasks/setup-host.yml
-      become: yes
+  # pre_tasks:
+  #   - name: Setup and update host
+  #     ansible.builtin.import_tasks: ./tasks/setup-host.yml
+  #     become: yes
 
-  roles:
-    # Install latest docker
-    - name: geerlingguy.docker
-      become: yes
-      vars:
-        docker_install_compose: false
-        docker_users: "{{ ansible_facts.user_id }}"
-    # Install pip, and python packages for docker and docker-compose
-    - name: geerlingguy.pip
-      become: yes
-      vars:
-        pip_install_packages:
-            - name: docker
-            - name: docker-compose
+  # roles:
+  #   # Install latest docker
+  #   - name: geerlingguy.docker
+  #     become: yes
+  #     vars:
+  #       docker_install_compose: false
+  #       docker_users: "{{ ansible_facts.user_id }}"
+  #   # Install pip, and python packages for docker and docker-compose
+  #   - name: geerlingguy.pip
+  #     become: yes
+  #     vars:
+  #       pip_install_packages:
+  #           - name: docker
+  #           - name: docker-compose
 
   tasks:
     - name: Reset connection to reload user changes
@@ -46,12 +46,12 @@
 
     - name: Configure Sonarr
       ansible.builtin.import_tasks: ./tasks/configure-sonarr.yml
-      when: sonarr.install
+      when: sonarr_enable
 
     - name: Configure Radarr
       ansible.builtin.import_tasks: ./tasks/configure-radarr.yml
-      when: radarr.install
+      when: radarr_enable
 
     - name: Configure Overseerr
       ansible.builtin.import_tasks: ./tasks/configure-overseerr.yml
-      when: overseerr.install
+      when: overseerr_enable
