@@ -25,7 +25,7 @@
 
 - name: Set Sonarr API URL
   ansible.builtin.set_fact:
-    sonarr_api_url: "http://localhost:{{ sonarr_port }}/api/v3"
+    sonarr_api_url: "https://{{ sonarr_hostname }}.{{ domain }}/api/v3"
 
 - name: Add jackett to sonarr
   ansible.builtin.import_tasks: ./tasks/sonarr/set_rootfolder.yml

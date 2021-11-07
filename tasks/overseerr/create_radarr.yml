@@ -4,6 +4,7 @@
     method: GET
     headers:
       Cookie: "connect.sid={{ overseerr_cookie }}"
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -35,6 +36,7 @@
         "useSsl": false,
         "baseUrl": ""
       }
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -73,7 +75,7 @@
     body: |
       {
         "name": "radarr",
-        "hostname": "radarr",
+        "hostname": "{{ radarr_hostname }}",
         "port": {{ radarr_port }},
         "apiKey": "{{ radarr_api_key }}",
         "useSsl": false,
@@ -84,11 +86,12 @@
         "is4k": false,
         "minimumAvailability": "In Cinemas",
         "isDefault": true,
-        "externalUrl": "http://radarr.{{ domain }}",
+        "externalUrl": "https://{{ radarr_hostname }}.{{ domain }}",
         "syncEnabled": true,
         "preventSearch": false
       }
     status_code: "{{ existing_radarr | ternary('200', '201') }}"
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10

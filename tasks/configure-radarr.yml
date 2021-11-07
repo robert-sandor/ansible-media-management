@@ -25,7 +25,7 @@
 
 - name: Set radarr API URL
   ansible.builtin.set_fact:
-    radarr_api_url: "http://localhost:{{ radarr_port }}/api/v3"
+    radarr_api_url: "https://{{ radarr_hostname }}.{{ domain }}/api/v3"
 
 - name: Add jackett to radarr
   ansible.builtin.import_tasks: ./tasks/radarr/set_rootfolder.yml

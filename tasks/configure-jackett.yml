@@ -1,7 +1,12 @@
+- name: Set jackett api url
+  ansible.builtin.set_fact:
+    jackett_api_url: "https://{{ jackett_hostname }}.{{ domain }}"
+
 - name: Get jackett cookie
   ansible.builtin.uri:
-    url: "http://localhost:{{ jackett_port }}/UI/Login"
+    url: "{{ jackett_api_url }}/UI/Login"
     method: GET
+    validate_certs: "{{ validate_certificates }}"
   register: auth_response
   retries: 10
   delay: 10
@@ -9,13 +14,14 @@
 
 - name: Set jackett indexer config
   ansible.builtin.uri:
-    url: "http://localhost:{{ jackett_port }}/api/v2.0/indexers/{{ jackett_indexer_name }}/config"
+    url: "{{ jackett_api_url }}/api/v2.0/indexers/{{ jackett_indexer_name }}/config"
     method: POST
     body_format: json
     body: "{{ jackett_indexer_config }}"
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
     status_code: 204
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -23,7 +29,7 @@
 
 - name: Set jackett server config
   ansible.builtin.uri:
-    url: "http://localhost:{{ jackett_port }}/api/v2.0/server/config"
+    url: "{{ jackett_api_url }}/api/v2.0/server/config"
     method: POST
     body_format: json
     body: 
@@ -47,6 +53,7 @@
       proxy_password: "{{ jackett_config_proxy_password }}"
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -54,13 +61,14 @@
 
 - name: Set jackett admin password
   ansible.builtin.uri:
-    url: "http://localhost:{{ jackett_port }}/api/v2.0/server/adminpassword"
+    url: "{{ jackett_api_url }}/api/v2.0/server/adminpassword"
     method: POST
     body_format: json
     body: "jackett_admin_password }}"
     headers:
       Cookie: "{{ auth_response.cookies_string }}"
     status_code: 204
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -85,4 +93,4 @@
 - name: Save jackett facts
   ansible.builtin.set_fact:
     jackett_api_key: "{{ jacket_api_lookup.stdout }}"
-    jackett_torznab_url: "http://jackett:{{ jackett_port }}/api/v2.0/indexers/{{ jackett_indexer_name }}/results/torznab/"
+    jackett_torznab_url: "http://{{ jackett_hostname }}:{{ jackett_port }}/api/v2.0/indexers/{{ jackett_indexer_name }}/results/torznab/"

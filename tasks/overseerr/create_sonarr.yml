@@ -4,6 +4,7 @@
     method: GET
     headers:
       Cookie: "connect.sid={{ overseerr_cookie }}"
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -35,6 +36,7 @@
         "useSsl": false,
         "baseUrl": ""
       }
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -73,7 +75,7 @@
     body: |
       {
         "name": "sonarr",
-        "hostname": "sonarr",
+        "hostname": "{{ sonarr_hostname }}",
         "port": {{ sonarr_port }},
         "apiKey": "{{ sonarr_api_key }}",
         "useSsl": false,
@@ -89,11 +91,12 @@
         "is4k": false,
         "enableSeasonFolders": true,
         "isDefault": true,
-        "externalUrl": "http://sonarr.{{ domain }}",
+        "externalUrl": "https://{{ sonarr_hostname }}.{{ domain }}",
         "syncEnabled": true,
         "preventSearch": false
       }
     status_code: "{{ existing_sonarr | ternary('200', '201') }}"
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10

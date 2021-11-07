@@ -1,7 +1,8 @@
 - name: Get radarr download clients
-  uri:
+  ansible.builtin.uri:
     url: "{{ radarr_api_url }}/downloadclient?apiKey={{ radarr_api_key }}"
     method: GET
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -12,7 +13,7 @@
     qbt_not_configured: "{{ _response.json | json_query('[?name == `qbittorrent`]') | length() == 0 }}"
 
 - name: Add qbittorrent download client
-  uri:
+  ansible.builtin.uri:
     url: "{{ radarr_api_url }}/downloadclient?apiKey={{ radarr_api_key }}"
     follow_redirects: none
     method: POST
@@ -51,6 +52,7 @@
       infoLink: 'https://wiki.servarr.com/radarr/supported#qbittorrent'
       tags: []
     status_code: 201
+    validate_certs: "{{ validate_certificates }}"
   when: qbt_not_configured
   register: _response
   retries: 10
@@ -58,7 +60,7 @@
   until: _response.status != -1 
 
 - name: Add qbittorrent remote mapping
-  uri:
+  ansible.builtin.uri:
     url: "{{ radarr_api_url }}/remotepathmapping?apiKey={{ radarr_api_key }}"
     method: POST
     body_format: json
@@ -67,6 +69,7 @@
       remotePath: "{{ radarr_remote_path_qbt }}"
       localPath: "/data{{ radarr_remote_path_qbt }}"
     status_code: 201
+    validate_certs: "{{ validate_certificates }}"
   when: qbt_not_configured
   register: _response
   retries: 10

@@ -1,8 +1,9 @@
 - name: Get sonarr indexers
-  uri:
+  ansible.builtin.uri:
     url: "{{ sonarr_api_url }}/indexer?apiKey={{ sonarr_api_key }}"
     follow_redirects: none
     method: GET
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -49,6 +50,7 @@
       infoLink: 'https://wiki.servarr.com/sonarr/supported#torznab'
       tags: []
     status_code: 201
+    validate_certs: "{{ validate_certificates }}"
   when: jackett_not_configured
   register: _response
   retries: 10

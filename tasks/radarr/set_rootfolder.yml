@@ -1,7 +1,8 @@
 - name: Get radarr root folder
-  uri:
+  ansible.builtin.uri:
     url: "{{ radarr_api_url }}/rootFolder?apiKey={{ radarr_api_key }}"
     method: GET
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -12,13 +13,14 @@
     rootpath_not_set: "{{ _response.json | json_query('[*].path') | length() == 0 }}"
 
 - name: Add radarr rootfolder
-  uri:
+  ansible.builtin.uri:
     url: "{{ radarr_api_url }}/rootFolder?apiKey={{ radarr_api_key }}"
     method: POST
     body_format: json
     body:
       path: "{{ radarr_root_folder }}"
     status_code: 201
+    validate_certs: "{{ validate_certificates }}"
   when: rootpath_not_set
   register: _response
   retries: 10

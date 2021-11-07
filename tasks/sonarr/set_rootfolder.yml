@@ -1,7 +1,8 @@
 - name: Get sonarr root folder
-  uri:
+  ansible.builtin.uri:
     url: "{{ sonarr_api_url }}/rootFolder?apiKey={{ sonarr_api_key }}"
     method: GET
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -12,13 +13,14 @@
     rootpath_not_set: "{{ _response.json | json_query('[*].path') | length() == 0 }}"
 
 - name: Add sonarr rootfolder
-  uri:
+  ansible.builtin.uri:
     url: "{{ sonarr_api_url }}/rootFolder?apiKey={{ sonarr_api_key }}"
     method: POST
     body_format: json
     body:
       path: "{{ sonarr_root_folder }}"
     status_code: 201
+    validate_certs: "{{ validate_certificates }}"
   when: rootpath_not_set
   register: _response
   retries: 10

@@ -104,8 +104,8 @@ services:
       - {{ jackett_volume }}:/config
     networks:
       - {{ network_name }}
-    ports:
-      - {{ jackett_port }}:{{ jackett_port }}
+    expose:
+      - {{ jackett_port }}
     labels:
       - traefik.enable=true
       - traefik.http.routers.{{ jackett_name }}.rule=Host(`{{ jackett_hostname }}.{{ domain }}`)
@@ -133,8 +133,8 @@ services:
       - {{ nfs_data_volume }}:/data
     networks:
       - {{ network_name }}
-    ports:
-      - {{ sonarr_port }}:{{ sonarr_port }}
+    expose:
+      - {{ sonarr_port }}
     labels:
       - traefik.enable=true
       - traefik.http.routers.{{ sonarr_name }}.rule=Host(`{{ sonarr_hostname }}.{{ domain }}`)
@@ -179,8 +179,8 @@ services:
       - {{ nfs_data_volume }}:/data
     networks:
       - {{ network_name }}
-    ports:
-      - {{ radarr_port }}:{{ radarr_port }}
+    expose:
+      - {{ radarr_port }}
     labels:
       - traefik.enable=true
       - traefik.http.routers.{{ radarr_name }}.rule=Host(`{{ radarr_hostname }}.{{ domain }}`)
@@ -221,8 +221,8 @@ services:
       - {{ overseerr_volume }}:/config
     networks:
       - {{ network_name }}
-    ports:
-      - {{ overseerr_port }}:{{ overseerr_port }}
+    expose:
+      - {{ overseerr_port }}
     labels:
       - traefik.enable=true
       - traefik.http.routers.{{ overseerr_name }}.rule=Host(`{{ overseerr_hostname }}.{{ domain }}`)

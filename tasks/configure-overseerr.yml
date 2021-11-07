@@ -1,6 +1,6 @@
 - name: Set overseerr_api variable
   ansible.builtin.set_fact:
-    overseerr_api: "http://localhost:{{ overseerr_port }}/api/v1"
+    overseerr_api: "https://{{ overseerr_hostname }}.{{ domain }}/api/v1"
 
 - name: Sign in to Overseerr using Plex Auth token
   ansible.builtin.uri:
@@ -9,6 +9,7 @@
     body_format: json
     body:
       authToken: "{{ overseerr_plex_auth_token }}"
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
@@ -31,6 +32,7 @@
         "port": {{ overseerr_plex_port }}, 
         "webAppUrl": "https://app.plex.tv/desktop"
       }
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
