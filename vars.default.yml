@@ -164,6 +164,21 @@ overseerr_sonarr_language_profile_name: "English"
 overseerr_radarr_profile_name: "HD-1080p"
 overseerr_radarr_language_profile_name: "English"
 
+# Requestrr
+requestrr_enable: true
+requestrr_name: requestrr
+requestrr_hostname: "{{ requestrr_name }}"
+requestrr_volume: "{{ requestrr_name }}-data"
+requestrr_image: linuxserver/requestrr
+requestrr_version: latest
+requestrr_port: 4545
+requestrr_username: admin
+requestrr_password: changeme
+requestrr_discord_client_id: "changeme"
+requestrr_discord_bot_token: "changeme"
+requestrr_discord_channels:
+  - "changeme"
+
 # Prometheus Node Exporter
 prom_node_exp_enable: yes
 prom_node_exp_version: latest

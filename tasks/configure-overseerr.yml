@@ -45,3 +45,19 @@
 - name: Create Radarr
   ansible.builtin.import_tasks: ./tasks/overseerr/create_radarr.yml
   when: radarr_enable
+
+- name: Get Overseerr apiKey
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/main"
+    method: GET
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
+
+- name: Save Overserr apiKey
+  ansible.builtin.set_fact:
+    overseerr_api_key: "{{ _response.json['apiKey'] }}"

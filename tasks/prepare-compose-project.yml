@@ -28,6 +28,7 @@
     - "{{ sonarr_volume }}"
     - "{{ radarr_volume }}"
     - "{{ overseerr_volume }}"
+    - "{{ requestrr_volume }}"
 
 - name: Create NFS Data share volume
   community.docker.docker_volume:

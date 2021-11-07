@@ -1,0 +1,125 @@
+- name: Set requestrr api url
+  ansible.builtin.set_fact:
+    requestrr_api_url: "https://{{ requestrr_hostname }}.{{ domain }}/api"
+
+- name: Get Requestrr initial setup page
+  ansible.builtin.uri:
+    url: "{{ requestrr_api_url }}/auth/registration"
+    method: GET
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
+
+- name: Set requestrr has registered
+  ansible.builtin.set_fact:
+    requestrr_has_registered: "{{ _response.json.hasRegistered }}"
+
+- name: Create new Requestrr user
+  ansible.builtin.uri:
+    url: "{{ requestrr_api_url }}/auth/register"
+    method: POST
+    body_format: json
+    body:
+      Username: "{{ requestrr_username }}"
+      Password: "{{ requestrr_password }}"
+      PasswordConfirmation: "{{ requestrr_password }}"
+    status_code: 200
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
+  when: not requestrr_has_registered
+
+- name: Login Requestrr
+  ansible.builtin.uri:
+    url: "{{ requestrr_api_url }}/auth/login"
+    method: POST
+    body_format: json
+    body:
+      Username: "{{ requestrr_username }}"
+      Password: "{{ requestrr_password }}"
+    status_code: 200
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
+
+- name: Save Requestrr token
+  ansible.builtin.set_fact:
+    requestrr_token: "{{ _response.json.token }}"
+
+- name: Set Overseerr as movies download client
+  ansible.builtin.uri:
+    url: "{{ requestrr_api_url }}/movies/overseerr"
+    method: POST
+    body_format: json
+    body:
+      Hostname: "{{ overseerr_hostname }}"
+      Port: "{{ overseerr_port }}"
+      ApiKey: "{{ overseerr_api_key }}"
+      Movies:
+        DefaultApiUserID: ""
+        Categories: []
+      UseSSL: false
+      Version: "1"
+    headers:
+      Authorization: "Bearer {{ requestrr_token }}"
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
+
+- name: Set Overseerr as series download client
+  ansible.builtin.uri:
+    url: "{{ requestrr_api_url }}/tvShows/overseerr"
+    method: POST
+    body_format: json
+    body:
+      Hostname: "{{ overseerr_hostname }}"
+      Port: "{{ overseerr_port }}"
+      ApiKey: "{{ overseerr_api_key }}"
+      Restrictions: "None"
+      TvShows:
+        DefaultApiUserID: ""
+        Categories: []
+      UseSSL: false
+      Version: "1"
+    headers:
+      Authorization: "Bearer {{ requestrr_token }}"
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
+
+- name: Set Discord as chat client
+  ansible.builtin.uri:
+    url: "{{ requestrr_api_url }}/chatclients"
+    method: POST
+    body_format: json
+    body:
+      Client: "Discord"
+      ClientId: "{{ requestrr_discord_client_id }}"
+      BotToken: "{{ requestrr_discord_bot_token }}"
+      StatusMessage: "/help"
+      MonitoredChannels: "{{ requestrr_discord_channels }}"
+      TvShowRoles: []
+      MovieRoles: []
+      EnableRequestsThroughDirectMessages: false
+      AutomaticallyNotifyRequesters: true
+      NotificationMode: "Channels"
+      NotificationChannels: "{{ requestrr_discord_channels }}"
+      AutomaticallyPurgeCommandMessages : false 
+      Language : "English"
+    headers:
+      Authorization: "Bearer {{ requestrr_token }}"
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1
