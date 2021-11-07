@@ -176,8 +176,6 @@ requestrr_username: admin
 requestrr_password: changeme
 requestrr_discord_client_id: "changeme"
 requestrr_discord_bot_token: "changeme"
-requestrr_discord_channels:
-  - "changeme"
 
 # Prometheus Node Exporter
 prom_node_exp_enable: yes
