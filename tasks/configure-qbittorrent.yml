@@ -1,13 +1,19 @@
+- name: Set qbittorrent api URL
+  ansible.builtin.set_fact:
+    qbt_api_url: "https://{{ qbt_hostname }}.{{ domain }}/api/v2"
+
 - name: Authenticate with qbittorrent using default credentials
   ansible.builtin.uri:
-    url: "http://localhost:{{ qbt_ui_port }}/api/v2/auth/login"
+    url: "{{ qbt_api_url }}/auth/login"
     method: POST
     body_format: form-urlencoded
     body:
       username: "{{ qbt_default_username }}"
       password: "{{ qbt_default_password }}"
     headers:
-      Referer: "http://localhost:{{ qbt_ui_port }}"
+      Referer: "https://{{ qbt_hostname }}.{{ domain }}"
+    validate_certs: "{{ validate_certificates }}"
+    status_code: [ 200, 401 ]
   register: _response
   retries: 10
   delay: 10
@@ -19,14 +25,15 @@
 
 - name: Authenticate with qbittorrent using changed credentials
   ansible.builtin.uri:
-    url: "http://localhost:{{ qbt_ui_port }}/api/v2/auth/login"
+    url: "{{ qbt_api_url }}/auth/login"
     method: POST
     body_format: form-urlencoded
     body:
       username: "{{ qbt_web_ui_username }}"
       password: "{{ qbt_web_ui_password }}"
     headers:
-      Referer: "http://localhost:{{ qbt_ui_port }}"
+      Referer: "https://{{ qbt_hostname }}.{{ domain }}"
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   when: qbt_cookie == ""
   retries: 10
@@ -46,7 +53,7 @@
 
 - name: Attempt to create categories in qbittorrent
   ansible.builtin.uri:
-    url: "http://localhost:{{ qbt_ui_port }}/api/v2/torrents/createCategory"
+    url: "{{ qbt_api_url }}/torrents/createCategory"
     method: POST
     body_format: form-urlencoded
     body:
@@ -55,6 +62,7 @@
     headers:
       Cookie: "{{ qbt_cookie }}"
     status_code: 200, 409
+    validate_certs: "{{ validate_certificates }}"
   with_items: "{{ qbt_categories }}"
   register: _response
   retries: 10
@@ -84,7 +92,7 @@
 
 - name: Set preferences in qbittorrent
   ansible.builtin.uri:
-    url: "http://localhost:{{ qbt_ui_port }}/api/v2/app/setPreferences"
+    url: "{{ qbt_api_url }}/app/setPreferences"
     method: POST
     body_format: form-urlencoded
     body:
@@ -92,6 +100,7 @@
     headers:
       Cookie: "{{ qbt_cookie }}"
     status_code: 200
+    validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10

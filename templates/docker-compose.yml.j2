@@ -76,7 +76,8 @@ services:
     ports:
       - {{ qbt_torrent_port }}:{{ qbt_torrent_port }}
       - {{ qbt_torrent_port }}:{{ qbt_torrent_port }}/udp
-      - {{ qbt_ui_port }}:{{ qbt_ui_port }}
+    expose:
+      - {{ qbt_ui_port }}
     labels:
       - traefik.enable=true
       - traefik.http.routers.{{ qbt_name }}.rule=Host(`{{ qbt_hostname }}.{{ domain }}`)

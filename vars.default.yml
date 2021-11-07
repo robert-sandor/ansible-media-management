@@ -22,6 +22,7 @@ acme_email: email@example.com
 acme_provider: cloudflare
 acme_volume: acme-data
 acme_testing_mode: yes
+validate_certificates: "{{ not acme_testing_mode }}"
 acme_env:
   CF_API_EMAIL: email@example.com
   CF_DNS_API_TOKEN: <cloudflare_token>
@@ -30,7 +31,7 @@ acme_env:
 # Qbittorrent
 qbt_enable: true
 qbt_name: qbittorrent
-qbt_hostname: "{{ qbt_name }}"
+qbt_hostname: "qbt"
 qbt_volume: "{{ qbt_name }}-data"
 qbt_image: ghcr.io/linuxserver/qbittorrent
 qbt_version: latest
