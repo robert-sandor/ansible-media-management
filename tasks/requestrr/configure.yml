@@ -107,13 +107,13 @@
       ClientId: "{{ requestrr_discord_client_id }}"
       BotToken: "{{ requestrr_discord_bot_token }}"
       StatusMessage: "/help"
-      MonitoredChannels: "{{ requestrr_discord_channels }}"
+      MonitoredChannels: []
       TvShowRoles: []
       MovieRoles: []
       EnableRequestsThroughDirectMessages: false
       AutomaticallyNotifyRequesters: true
       NotificationMode: "Channels"
-      NotificationChannels: "{{ requestrr_discord_channels }}"
+      NotificationChannels: []
       AutomaticallyPurgeCommandMessages : false 
       Language : "English"
     headers:

@@ -39,11 +39,11 @@
   until: _response.status != -1
 
 - name: Create Sonarr
-  ansible.builtin.import_tasks: ./tasks/overseerr/create_sonarr.yml
+  ansible.builtin.import_tasks: ../tasks/overseerr/create_sonarr.yml
   when: sonarr_enable
 
 - name: Create Radarr
-  ansible.builtin.import_tasks: ./tasks/overseerr/create_radarr.yml
+  ansible.builtin.import_tasks: ../tasks/overseerr/create_radarr.yml
   when: radarr_enable
 
 - name: Get Overseerr apiKey

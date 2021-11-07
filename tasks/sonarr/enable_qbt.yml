@@ -70,7 +70,7 @@
     body:
       host: qbittorrent
       remotePath: "{{ sonarr_remote_path_qbt }}"
-      localPath: "/data{{ sonarr_remote_path_qbt }}"
+      localPath: "{{ sonarr_remote_path_qbt }}"
     status_code: 201
     validate_certs: "{{ validate_certificates }}"
   when: qbt_not_configured

@@ -1,0 +1,21 @@
+- name: Stop services
+  community.docker.docker_compose:
+    project_name: "{{ project_name }}"
+    project_src: "{{ project_folder }}"
+    state: absent
+  when: teardown_containers
+
+- name: Prune images, networks and volumes
+  community.docker.docker_prune:
+    images: yes
+    images_filters:
+      dangling: no
+    networks: "{{ teardown_networks }}"
+    volumes: "{{ teardown_volumes }}"
+    builder_cache: yes
+
+- name: Remove project dir
+  ansible.builtin.file:
+    path: "{{ project_folder }}"
+    state: absent
+  when: teardown_project_dir

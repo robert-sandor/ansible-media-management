@@ -28,16 +28,16 @@
     radarr_api_url: "https://{{ radarr_hostname }}.{{ domain }}/api/v3"
 
 - name: Add jackett to radarr
-  ansible.builtin.import_tasks: ./tasks/radarr/set_rootfolder.yml
+  ansible.builtin.import_tasks: ../tasks/radarr/set_rootfolder.yml
 
 - name: Add jackett to radarr
-  ansible.builtin.import_tasks: ./tasks/radarr/enable_jackett.yml
+  ansible.builtin.import_tasks: ../tasks/radarr/enable_jackett.yml
   when: jackett_enable
 
 - name: Add qbittorrent to radarr
-  ansible.builtin.import_tasks: ./tasks/radarr/enable_qbt.yml
+  ansible.builtin.import_tasks: ../tasks/radarr/enable_qbt.yml
   when: qbt_enable
 
 - name: Configure exportarr for radarr
-  ansible.builtin.import_tasks: ./tasks/radarr/configure_exportarr.yml
+  ansible.builtin.import_tasks: ../tasks/radarr/configure_exportarr.yml
   when: radarr_exportarr_enable

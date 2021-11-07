@@ -6,12 +6,12 @@
   gather_facts: yes
 
   vars_files:
-    - ./vars.default.yml
-    - ./vars.yml
+    - ../vars.default.yml
+    - ../vars.yml
 
   pre_tasks:
     - name: Setup and update host
-      ansible.builtin.import_tasks: ./tasks/setup-host.yml
+      ansible.builtin.import_tasks: ../tasks/setup-host.yml
       become: yes
 
   roles:
@@ -34,28 +34,28 @@
       ansible.builtin.meta: reset_connection
 
     - name: Prepare docker compose project
-      ansible.builtin.import_tasks: ./tasks/prepare-compose-project.yml
+      ansible.builtin.import_tasks: ../tasks/prepare-compose-project.yml
 
     - name: Configure QBittorrent
-      ansible.builtin.import_tasks: ./tasks/configure-qbittorrent.yml
+      ansible.builtin.import_tasks: ../tasks/configure-qbittorrent.yml
       when: qbt_enable
     
     - name: Configure Jackett
-      ansible.builtin.import_tasks: ./tasks/configure-jackett.yml
+      ansible.builtin.import_tasks: ../tasks/configure-jackett.yml
       when: jackett_enable
 
     - name: Configure Sonarr
-      ansible.builtin.import_tasks: ./tasks/configure-sonarr.yml
+      ansible.builtin.import_tasks: ../tasks/configure-sonarr.yml
       when: sonarr_enable
 
     - name: Configure Radarr
-      ansible.builtin.import_tasks: ./tasks/configure-radarr.yml
+      ansible.builtin.import_tasks: ../tasks/configure-radarr.yml
       when: radarr_enable
 
     - name: Configure Overseerr
-      ansible.builtin.import_tasks: ./tasks/configure-overseerr.yml
+      ansible.builtin.import_tasks: ../tasks/configure-overseerr.yml
       when: overseerr_enable
 
     - name: Configure Requestrr
-      ansible.builtin.import_tasks: ./tasks/requestrr/configure.yml
+      ansible.builtin.import_tasks: ../tasks/requestrr/configure.yml
       when: requestrr_enable

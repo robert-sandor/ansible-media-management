@@ -67,7 +67,7 @@
     body:
       host: qbittorrent
       remotePath: "{{ radarr_remote_path_qbt }}"
-      localPath: "/data{{ radarr_remote_path_qbt }}"
+      localPath: "{{ radarr_remote_path_qbt }}"
     status_code: 201
     validate_certs: "{{ validate_certificates }}"
   when: qbt_not_configured

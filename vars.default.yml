@@ -2,11 +2,18 @@ timezone: Etc/UTC
 domain: change.me
 restart_policy: unless-stopped
 network_name: media-net
+project_name: media-server
 project_folder: ~/media-server
 
 nfs_data_server: 192.168.1.10
 nfs_data_device: /data
 nfs_data_volume: nfs-data
+
+# Teardown
+teardown_containers: yes
+teardown_networks: yes
+teardown_volumes: no
+teardown_project_dir: yes
 
 # Traefik
 traefik_enable: yes

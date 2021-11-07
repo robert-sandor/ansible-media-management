@@ -28,16 +28,16 @@
     sonarr_api_url: "https://{{ sonarr_hostname }}.{{ domain }}/api/v3"
 
 - name: Add jackett to sonarr
-  ansible.builtin.import_tasks: ./tasks/sonarr/set_rootfolder.yml
+  ansible.builtin.import_tasks: ../tasks/sonarr/set_rootfolder.yml
 
 - name: Add jackett to sonarr
-  ansible.builtin.import_tasks: ./tasks/sonarr/enable_jackett.yml
+  ansible.builtin.import_tasks: ../tasks/sonarr/enable_jackett.yml
   when: jackett_enable
 
 - name: Add qbittorrent to sonarr
-  ansible.builtin.import_tasks: ./tasks/sonarr/enable_qbt.yml
+  ansible.builtin.import_tasks: ../tasks/sonarr/enable_qbt.yml
   when: qbt_enable
 
 - name: Configure exportarr for sonarr
-  ansible.builtin.import_tasks: ./tasks/sonarr/configure_exportarr.yml
+  ansible.builtin.import_tasks: ../tasks/sonarr/configure_exportarr.yml
   when: sonarr_exportarr_enable

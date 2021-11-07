@@ -70,7 +70,7 @@
   until: _response.status != -1 
 
 - name: Get alternaltive web UI for qbittorrent
-  ansible.builtin.import_tasks: ./tasks/qbittorrent/get-vuetorrent.yml
+  ansible.builtin.import_tasks: ../tasks/qbittorrent/get-vuetorrent.yml
   when: qbt_alternative_webui_enabled
 
 - name: Create qbt preferences request body

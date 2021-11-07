@@ -1,0 +1,14 @@
+---
+- name: Teardown core home server services
+  
+  hosts: all
+  
+  gather_facts: yes
+
+  vars_files:
+    - ../vars.default.yml
+    - ../vars.yml
+
+  tasks:
+    - name: Teardown
+      ansible.builtin.import_tasks: ../tasks/teardown.yml
