@@ -1,0 +1,13 @@
+- name: Save sonarr api key to env file
+  ansible.builtin.lineinfile:
+    path: "{{ project_folder }}/.env"
+    regexp: "^SONARR_API_KEY="
+    line: "SONARR_API_KEY={{ sonarr_api_key }}"
+    create: yes
+
+- name: Restart sonarr exportarr
+  community.docker.docker_compose:
+    project_name: media-server
+    project_src: "{{ project_folder }}"
+    restarted: yes
+    services: "{{ sonarr_name }}-exporter"

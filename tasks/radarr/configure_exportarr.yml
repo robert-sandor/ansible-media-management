@@ -1,0 +1,13 @@
+- name: Save radarr api key to env file
+  ansible.builtin.lineinfile:
+    path: "{{ project_folder }}/.env"
+    regexp: "^RADARR_API_KEY="
+    line: "RADARR_API_KEY={{ radarr_api_key }}"
+    create: yes
+
+- name: Restart radarr exportarr
+  community.docker.docker_compose:
+    project_name: media-server
+    project_src: "{{ project_folder }}"
+    restarted: yes
+    services: "{{ radarr_name }}-exporter"

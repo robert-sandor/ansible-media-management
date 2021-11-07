@@ -42,3 +42,4 @@
   community.docker.docker_compose:
     project_name: media-server
     project_src: "{{ project_folder }}"
+    pull: yes

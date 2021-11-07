@@ -37,3 +37,7 @@
 - name: Add qbittorrent to radarr
   ansible.builtin.import_tasks: ./tasks/radarr/enable_qbt.yml
   when: qbt_enable
+
+- name: Configure exportarr for radarr
+  ansible.builtin.import_tasks: ./tasks/radarr/configure_exportarr.yml
+  when: radarr_exportarr_enable
