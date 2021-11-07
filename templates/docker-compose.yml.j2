@@ -231,6 +231,34 @@ services:
       - traefik.http.routers.{{ overseerr_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
+{% if prom_node_exp_enable %}
+  {{ prom_node_exp_name }}:
+    container_name: {{ prom_node_exp_name }}
+    hostname: {{ prom_node_exp_name }}
+    image: {{ prom_node_exp_image }}:{{ prom_node_exp_version }}
+    command:
+      - '--path.rootfs=/host'
+    network_mode: host
+    pid: host
+    volumes:
+      - '/:/host:ro,rslave'
+    restart: {{ restart_policy }}
+
+{% endif %}
+{% if pagent_enable %}
+  {{ pagent_name }}:
+    container_name: {{ pagent_name }}
+    hostname: {{ pagent_hostname }}
+    image: {{ pagent_image }}:{{ pagent_version }}
+    networks:
+      - {{ network_name }}
+    ports:
+      - 9001:9001
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    restart: {{ restart_policy }}
+
+{% endif %}
 networks:
   {{ network_name }}:
     external: true

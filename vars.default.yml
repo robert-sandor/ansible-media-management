@@ -162,4 +162,16 @@ overseerr_sonarr_profile_name: "HD-1080p"
 overseerr_sonarr_language_profile_name: "English"
 overseerr_radarr_profile_name: "HD-1080p"
 overseerr_radarr_language_profile_name: "English"
-    
+
+# Prometheus Node Exporter
+prom_node_exp_enable: yes
+prom_node_exp_version: latest
+prom_node_exp_name: node-exporter 
+prom_node_exp_image: prom/node-exporter
+
+# Portainer Agent
+pagent_enable: yes
+pagent_name: pagent
+pagent_hostname: "{{ pagent_name }}"
+pagent_image: portainer/agent
+pagent_version: latest

@@ -43,3 +43,4 @@
     project_name: media-server
     project_src: "{{ project_folder }}"
     pull: yes
+    remove_orphans: yes
