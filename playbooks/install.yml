@@ -37,19 +37,19 @@
       ansible.builtin.import_tasks: ../tasks/prepare-compose-project.yml
 
     - name: Configure QBittorrent
-      ansible.builtin.import_tasks: ../tasks/configure-qbittorrent.yml
+      ansible.builtin.import_tasks: ../tasks/qbittorrent/configure.yml
       when: qbt_enable
     
     - name: Configure Jackett
-      ansible.builtin.import_tasks: ../tasks/configure-jackett.yml
+      ansible.builtin.import_tasks: ../tasks/jackett/configure.yml
       when: jackett_enable
 
     - name: Configure Sonarr
-      ansible.builtin.import_tasks: ../tasks/configure-sonarr.yml
+      ansible.builtin.import_tasks: ../tasks/sonarr/configure.yml
       when: sonarr_enable
 
     - name: Configure Radarr
-      ansible.builtin.import_tasks: ../tasks/configure-radarr.yml
+      ansible.builtin.import_tasks: ../tasks/radarr/configure.yml
       when: radarr_enable
 
     - name: Configure Overseerr
