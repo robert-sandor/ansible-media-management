@@ -1,9 +1,9 @@
 timezone: Etc/UTC
 domain: change.me
 restart_policy: unless-stopped
-network_name: media-net
-project_name: media-server
-project_folder: ~/media-server
+project_name: media-mgmt
+network_name: "{{ project_name }}-net"
+project_folder: "~/{{ project_name }}"
 
 nfs_data_server: 192.168.1.10
 nfs_data_device: /data

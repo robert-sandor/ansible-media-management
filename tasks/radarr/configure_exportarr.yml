@@ -7,7 +7,7 @@
 
 - name: Restart radarr exportarr
   community.docker.docker_compose:
-    project_name: media-server
+    project_name: "{{ project_name }}"
     project_src: "{{ project_folder }}"
     restarted: yes
     services: "{{ radarr_name }}-exporter"

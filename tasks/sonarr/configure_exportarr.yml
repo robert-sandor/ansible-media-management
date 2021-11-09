@@ -8,7 +8,7 @@
 
 - name: Restart sonarr exportarr
   community.docker.docker_compose:
-    project_name: media-server
+    project_name: "{{ project_name }}"
     project_src: "{{ project_folder }}"
     restarted: yes
     services: "{{ sonarr_name }}-exporter"
