@@ -6,7 +6,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 
   
 - name: Check if a rootfolder exists
   set_fact:
@@ -25,4 +25,4 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 

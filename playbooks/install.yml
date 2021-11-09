@@ -53,7 +53,7 @@
       when: radarr_enable
 
     - name: Configure Overseerr
-      ansible.builtin.import_tasks: ../tasks/configure-overseerr.yml
+      ansible.builtin.import_tasks: ../tasks/overseerr/configure.yml
       when: overseerr_enable
 
     - name: Configure Requestrr

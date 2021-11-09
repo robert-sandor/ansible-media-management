@@ -6,7 +6,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 
 
 - name: Save download clients Json data to a Variable as a Fact
   set_fact:
@@ -60,7 +60,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 
 
 - name: Add qbittorrent remote mapping
   ansible.builtin.uri:
@@ -77,4 +77,4 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 

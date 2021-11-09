@@ -1,0 +1,46 @@
+- name: Set Plex server configuration
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/plex"
+    method: POST
+    body_format: json
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+    body: |
+      {
+        "ip": "{{ overseerr_plex_ip }}", 
+        "port": {{ overseerr_plex_port }}, 
+        "webAppUrl": "{{ overseerr_plex_webapp_url }}"
+      }
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
+
+- name: Get Plex libraries
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/plex/library?sync=true"
+    method: GET
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
+
+- name: Get all library IDs
+  ansible.builtin.set_fact:
+    plex_library_ids: "{{ _response.json | json_query('[*].id') }}"
+
+- name: Enable all Plex libraries
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/plex/library?enable={{ plex_library_ids | join(',') }}"
+    method: GET
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404

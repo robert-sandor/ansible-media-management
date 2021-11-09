@@ -11,6 +11,7 @@ nfs_data_volume: nfs-data
 
 # Teardown
 teardown_containers: yes
+teardown_images: yes
 teardown_networks: yes
 teardown_volumes: no
 teardown_project_dir: yes
@@ -166,10 +167,15 @@ overseerr_port: 5055
 overseerr_plex_auth_token: changeme # Plex auth token, to get it follow https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
 overseerr_plex_ip: 192.168.1.1      # IP address of the plex server running locally
 overseerr_plex_port: 32400          # Port of the Plex server, usually 32400
+overseerr_plex_webapp_url: https://app.plex.tv/desktop
 overseerr_sonarr_profile_name: "HD-1080p"
 overseerr_sonarr_language_profile_name: "English"
 overseerr_radarr_profile_name: "HD-1080p"
 overseerr_radarr_language_profile_name: "English"
+overseerr_enable_discord_notifications: yes
+overseerr_discord_webhook_url: "change.me"
+overseerr_discord_bot_name: "overseerr"
+overseerr_discord_bot_avatar: "https://github.com/sct/overseerr/blob/develop/public/os_logo_filled.png"
 
 # Requestrr
 requestrr_enable: true

@@ -10,7 +10,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Set requestrr has registered
   ansible.builtin.set_fact:
@@ -30,7 +30,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
   when: not requestrr_has_registered
 
 - name: Login Requestrr
@@ -46,7 +46,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Save Requestrr token
   ansible.builtin.set_fact:
@@ -72,7 +72,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Set Overseerr as series download client
   ansible.builtin.uri:
@@ -95,7 +95,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Set Discord as chat client
   ansible.builtin.uri:
@@ -122,4 +122,4 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404

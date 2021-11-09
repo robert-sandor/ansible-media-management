@@ -7,10 +7,14 @@
     url: "{{ jackett_api_url }}/UI/Login"
     method: GET
     validate_certs: "{{ validate_certificates }}"
-  register: auth_response
+  register: _response
   retries: 10
   delay: 10
-  until: auth_response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
+
+- name: Save jackett cookie
+  ansible.builtin.set_fact:
+    jackett_cookie: "{{ _response.cookies_string }}"
 
 - name: Set jackett indexer config
   ansible.builtin.uri:
@@ -19,13 +23,13 @@
     body_format: json
     body: "{{ jackett_indexer_config }}"
     headers:
-      Cookie: "{{ auth_response.cookies_string }}"
+      Cookie: "{{ jackett_cookie }}"
     status_code: 204
     validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 and _response.status < 500 and _response.status != 404
 
 - name: Set jackett server config
   ansible.builtin.uri:
@@ -52,12 +56,12 @@
       proxy_username: "{{ jackett_config_proxy_username }}"
       proxy_password: "{{ jackett_config_proxy_password }}"
     headers:
-      Cookie: "{{ auth_response.cookies_string }}"
+      Cookie: "{{ jackett_cookie }}"
     validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Set jackett admin password
   ansible.builtin.uri:
@@ -66,13 +70,13 @@
     body_format: json
     body: "jackett_admin_password }}"
     headers:
-      Cookie: "{{ auth_response.cookies_string }}"
+      Cookie: "{{ jackett_cookie }}"
     status_code: 204
     validate_certs: "{{ validate_certificates }}"
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Get jackett volume info
   community.docker.docker_volume_info:

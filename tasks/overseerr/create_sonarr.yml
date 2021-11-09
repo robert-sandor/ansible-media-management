@@ -8,7 +8,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Check for existing sonarr servers with same hostname and port
   ansible.builtin.set_fact:
@@ -40,7 +40,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Save sonarr test response
   ansible.builtin.set_fact:
@@ -100,4 +100,4 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404

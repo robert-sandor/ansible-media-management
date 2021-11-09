@@ -7,7 +7,7 @@
 
 - name: Prune images, networks and volumes
   community.docker.docker_prune:
-    images: yes
+    images: "{{ teardown_images }}"
     images_filters:
       dangling: no
     networks: "{{ teardown_networks }}"

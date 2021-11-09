@@ -17,7 +17,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 
 
 - name: Save qbittorrent cookie
   ansible.builtin.set_fact:
@@ -38,7 +38,7 @@
   when: qbt_cookie == ""
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 
 
 - name: Save qbittorrent cookie
   ansible.builtin.set_fact:
@@ -67,7 +67,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 
 
 - name: Get alternaltive web UI for qbittorrent
   ansible.builtin.import_tasks: ../tasks/qbittorrent/get-vuetorrent.yml
@@ -104,4 +104,4 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1 
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404 

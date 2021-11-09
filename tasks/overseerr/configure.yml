@@ -13,30 +13,14 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Save Overserr cookie
   ansible.builtin.set_fact:
     overseerr_cookie: "{{ _response.cookies['connect.sid'] }}"
 
-- name: Set Plex server configuration
-  ansible.builtin.uri:
-    url: "{{ overseerr_api }}/settings/plex"
-    method: POST
-    body_format: json
-    headers:
-      Cookie: "connect.sid={{ overseerr_cookie }}"
-    body: |
-      {
-        "ip": "{{ overseerr_plex_ip }}", 
-        "port": {{ overseerr_plex_port }}, 
-        "webAppUrl": "https://app.plex.tv/desktop"
-      }
-    validate_certs: "{{ validate_certificates }}"
-  register: _response
-  retries: 10
-  delay: 10
-  until: _response.status != -1
+- name: Configure Plex
+  ansible.builtin.import_tasks: ../tasks/overseerr/configure_plex.yml
 
 - name: Create Sonarr
   ansible.builtin.import_tasks: ../tasks/overseerr/create_sonarr.yml
@@ -45,6 +29,10 @@
 - name: Create Radarr
   ansible.builtin.import_tasks: ../tasks/overseerr/create_radarr.yml
   when: radarr_enable
+
+- name: Configure Discord notifications
+  ansible.builtin.import_tasks: ../tasks/overseerr/configure_discord.yml
+  when: overseerr_enable_discord_notifications
 
 - name: Get Overseerr apiKey
   ansible.builtin.uri:
@@ -56,7 +44,7 @@
   register: _response
   retries: 10
   delay: 10
-  until: _response.status != -1
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
 
 - name: Save Overserr apiKey
   ansible.builtin.set_fact:

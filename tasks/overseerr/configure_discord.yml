@@ -1,0 +1,40 @@
+- name: Build discord settings
+  ansible.builtin.set_fact:
+    discord_settings:
+      enabled: yes
+      # have no idea where this is coming from, but once i do, i'll try to get it programatically
+      # this is used to control what notifications to send to discord
+      types: 222 
+      options:
+        botUsername: "{{ overseerr_discord_bot_name }}"
+        botAvatarUrl: "{{ overseerr_discord_bot_avatar }}"
+        webhookUrl: "{{ overseerr_discord_webhook_url }}"
+
+- name: Test Discord notifications configuration
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/notifications/discord/test"
+    method: POST
+    body_format: json
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+    body: "{{ discord_settings }}"
+    validate_certs: "{{ validate_certificates }}"
+    status_code: 204
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
+
+- name: Set Discord notifications configuration
+  ansible.builtin.uri:
+    url: "{{ overseerr_api }}/settings/notifications/discord"
+    method: POST
+    body_format: json
+    headers:
+      Cookie: "connect.sid={{ overseerr_cookie }}"
+    body: "{{ discord_settings }}"
+    validate_certs: "{{ validate_certificates }}"
+  register: _response
+  retries: 10
+  delay: 10
+  until: _response.status != -1 and _response.status < 500 and _response.status != 404
