@@ -27,6 +27,7 @@
     - "{{ jackett_volume }}"
     - "{{ sonarr_volume }}"
     - "{{ radarr_volume }}"
+    - "{{ bazarr_volume }}"
     - "{{ overseerr_volume }}"
     - "{{ requestrr_volume }}"
 

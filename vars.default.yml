@@ -157,6 +157,15 @@ radarr_exportarr_image: ghcr.io/onedr0p/exportarr
 radarr_exportarr_version: latest
 radarr_exportarr_port: 9708
 
+bazarr_enable: true
+bazarr_name: bazarr
+bazarr_hostname: "{{ bazarr_name }}"
+bazarr_volume: "{{ bazarr_name }}-data"
+bazarr_image: ghcr.io/linuxserver/bazarr
+bazarr_version: latest
+bazarr_port: 6767
+bazarr_apply_dark_theme: yes
+
 overseerr_enable: true
 overseerr_name: overseerr
 overseerr_hostname: "{{ overseerr_name }}"

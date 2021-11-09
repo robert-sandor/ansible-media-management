@@ -207,6 +207,35 @@ services:
 
 {% endif %}
 {% endif %}
+{% if bazarr_enable %}
+  {{ bazarr_name }}:
+    container_name: {{ bazarr_name }}
+    hostname: {{ bazarr_hostname }}
+    image: {{ bazarr_image }}:{{ bazarr_version }}
+    restart: {{ restart_policy }}
+    environment:
+      - PUID={{ ansible_facts.user_uid }}
+      - PGID={{ ansible_facts.user_gid }}
+      - TZ={{ timezone }}
+{% if bazarr_apply_dark_theme %}
+      - DOCKER_MODS=ghcr.io/gilbn/theme.park:bazarr
+{% endif %}
+    volumes:
+      - {{ bazarr_volume }}:/config
+      - {{ nfs_data_volume }}:/data
+    networks:
+      - {{ network_name }}
+    expose:
+      - {{ bazarr_port }}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.{{ bazarr_name }}.rule=Host(`{{ bazarr_hostname }}.{{ domain }}`)
+      - traefik.http.routers.{{ bazarr_name }}.entrypoints=websecure
+      - traefik.http.services.{{ bazarr_name }}.loadbalancer.server.port={{ bazarr_port }}
+      - traefik.http.routers.{{ bazarr_name }}.service={{ bazarr_name }}
+      - traefik.http.routers.{{ bazarr_name }}.tls.certresolver={{ acme_provider }}
+
+{% endif %}
 {% if overseerr_enable %}
   {{ overseerr_name }}:
     container_name: {{ overseerr_name }}
@@ -301,6 +330,8 @@ volumes:
   {{ sonarr_volume }}:
     external: true
   {{ radarr_volume }}:
+    external: true
+  {{ bazarr_volume }}:
     external: true
   {{ overseerr_volume }}:
     external: true

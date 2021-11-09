@@ -4,6 +4,7 @@
     regexp: "^SONARR_API_KEY="
     line: "SONARR_API_KEY={{ sonarr_api_key }}"
     create: yes
+  register: _response
 
 - name: Restart sonarr exportarr
   community.docker.docker_compose:
@@ -11,3 +12,4 @@
     project_src: "{{ project_folder }}"
     restarted: yes
     services: "{{ sonarr_name }}-exporter"
+  when: _response.changed
