@@ -22,8 +22,8 @@ traefik_version: v2.5
 traefik_name: traefik
 traefik_image: traefik
 traefik_enable_metrics: yes
-traefik_enable_access_logs: no
-traefik_metrics_port: 8082
+traefik_enable_access_logs: yes
+traefik_metrics_port: 8081
 
 # ACME Certificates config
 acme_email: email@example.com
