@@ -149,23 +149,6 @@ services:
       - traefik.http.routers.{{ sonarr_name }}.service={{ sonarr_name }}
       - traefik.http.routers.{{ sonarr_name }}.tls.certresolver={{ acme_provider }}
 
-{% if sonarr_exportarr_enable %}
-  {{ sonarr_name }}-exporter:
-    container_name: {{ sonarr_name }}-exporter
-    hostname: {{ sonarr_name }}-exporter
-    image: {{ sonarr_exportarr_image }}:{{ sonarr_exportarr_version }}
-    command: ["exportarr", "sonarr"]
-    restart: {{ restart_policy }}
-    environment:
-      PORT: {{ sonarr_exportarr_port }}
-      URL: http://{{ sonarr_hostname }}:{{ sonarr_port }}
-      APIKEY: $SONARR_API_KEY
-    networks:
-      - {{ network_name }}
-    ports:
-      - {{ sonarr_exportarr_port }}:{{ sonarr_exportarr_port }}
-
-{% endif %}
 {% endif %}
 {% if radarr_enable %}
   {{ radarr_name }}:
@@ -195,23 +178,6 @@ services:
       - traefik.http.routers.{{ radarr_name }}.service={{ radarr_name }}
       - traefik.http.routers.{{ radarr_name }}.tls.certresolver={{ acme_provider }}
 
-{% if radarr_exportarr_enable %}
-  {{ radarr_name }}-exporter:
-    container_name: {{ radarr_name }}-exporter
-    hostname: {{ radarr_name }}-exporter
-    image: {{ radarr_exportarr_image }}:{{ radarr_exportarr_version }}
-    command: ["exportarr", "radarr"]
-    restart: {{ restart_policy }}
-    environment:
-      PORT: {{ radarr_exportarr_port }}
-      URL: http://{{ radarr_hostname }}:{{ radarr_port }}
-      APIKEY: $RADARR_API_KEY
-    networks:
-      - {{ network_name }}
-    ports:
-      - {{ radarr_exportarr_port }}:{{ radarr_exportarr_port }}
-
-{% endif %}
 {% endif %}
 {% if bazarr_enable %}
   {{ bazarr_name }}:

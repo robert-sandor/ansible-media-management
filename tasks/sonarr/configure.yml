@@ -37,7 +37,3 @@
 - name: Add qbittorrent to sonarr
   ansible.builtin.import_tasks: ../tasks/sonarr/enable_qbt.yml
   when: qbt_enable
-
-- name: Configure exportarr for sonarr
-  ansible.builtin.import_tasks: ../tasks/sonarr/configure_exportarr.yml
-  when: sonarr_exportarr_enable

@@ -133,11 +133,6 @@ sonarr_qbt_category: tv
 sonarr_root_folder: /data/media/tv
 sonarr_remote_path_qbt: "{{ qbt_download_folder }}/tv" # should match the tv category path from qbittorrent settings
 
-sonarr_exportarr_enable: yes
-sonarr_exportarr_image: ghcr.io/onedr0p/exportarr
-sonarr_exportarr_version: latest
-sonarr_exportarr_port: 9707
-
 radarr_enable: true
 radarr_name: radarr
 radarr_hostname: "{{ radarr_name }}"
@@ -151,11 +146,6 @@ radarr_minimum_seeders: 5
 radarr_qbt_category: movie
 radarr_root_folder: /data/media/movies
 radarr_remote_path_qbt: "{{ qbt_download_folder }}/movies" # should match the movie category path from qbittorrent settings
-
-radarr_exportarr_enable: yes
-radarr_exportarr_image: ghcr.io/onedr0p/exportarr
-radarr_exportarr_version: latest
-radarr_exportarr_port: 9708
 
 bazarr_enable: true
 bazarr_name: bazarr
