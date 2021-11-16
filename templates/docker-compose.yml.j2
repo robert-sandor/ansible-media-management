@@ -22,8 +22,6 @@ services:
       - "--certificatesresolvers.{{ acme_provider }}.acme.storage=/letsencrypt/acme.json"
       - "--certificatesresolvers.{{ acme_provider }}.acme.caserver=https://acme{% if acme_testing_mode %}-staging{% endif %}-v02.api.letsencrypt.org/directory"
       - "--metrics.prometheus={{ traefik_enable_metrics | ternary('true', 'false') }}"
-      - "--entryPoints.metrics.address=:{{ traefik_metrics_port }}"
-      - "--metrics.prometheus.entryPoint=metrics"
     environment:
       - PUID={{ ansible_facts.user_uid }}
       - PGID={{ ansible_facts.user_gid }}
