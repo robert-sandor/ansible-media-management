@@ -50,6 +50,12 @@ services:
       - traefik.http.routers.traefik.entrypoints=websecure
       - traefik.http.routers.traefik.service=api@internal
       - traefik.http.routers.traefik.tls.certresolver={{ acme_provider }}
+{% if traefik_enable_metrics %}
+      - traefik.http.routers.metrics.rule=Host(`{{ traefik_name }}.{{ domain }}`) && Path(`/metrics`)
+      - traefik.http.routers.metrics.entrypoints=websecure
+      - traefik.http.routers.metrics.service=prometheus@internal
+      - traefik.http.routers.metrics.tls.certresolver={{ acme_provider }}
+{% endif %}
       - flame.type=application
       - flame.name={{ traefik_name }}
       - flame.url={{ traefik_name }}.{{ domain }}
