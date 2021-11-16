@@ -1,0 +1,42 @@
+---
+- name: Update media management services
+  
+  hosts: all
+  
+  gather_facts: yes
+
+  vars_files:
+    - ../vars.default.yml
+    - ../vars.yml
+
+  tasks:
+    - name: Update system
+      ansible.builtin.import_tasks: ../tasks/update-system.yml
+      when: update_system
+
+    - name: Update containers
+      ansible.builtin.import_tasks: ../tasks/docker-compose-up.yml
+
+    - name: Configure QBittorrent
+      ansible.builtin.import_tasks: ../tasks/qbittorrent/configure.yml
+      when: qbt_enable
+    
+    - name: Configure Jackett
+      ansible.builtin.import_tasks: ../tasks/jackett/configure.yml
+      when: jackett_enable
+
+    - name: Configure Sonarr
+      ansible.builtin.import_tasks: ../tasks/sonarr/configure.yml
+      when: sonarr_enable
+
+    - name: Configure Radarr
+      ansible.builtin.import_tasks: ../tasks/radarr/configure.yml
+      when: radarr_enable
+
+    - name: Configure Overseerr
+      ansible.builtin.import_tasks: ../tasks/overseerr/configure.yml
+      when: overseerr_enable
+
+    - name: Configure Requestrr
+      ansible.builtin.import_tasks: ../tasks/requestrr/configure.yml
+      when: requestrr_enable

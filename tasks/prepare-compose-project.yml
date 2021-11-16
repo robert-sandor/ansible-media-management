@@ -6,13 +6,7 @@
     group: "{{ ansible_facts.user_id }}"
     mode: '0750'
 
-- name: Template docker compose file
-  ansible.builtin.template:
-    src: ../templates/docker-compose.yml.j2
-    dest: "{{ project_folder }}/docker-compose.yml"
-    owner: "{{ ansible_facts.user_id }}"
-    group: "{{ ansible_facts.user_id }}"
-    mode: '0640'
+
 
 - name: Create docker network {{ network_name }}
   community.docker.docker_network:
@@ -40,9 +34,5 @@
       o: "addr={{ nfs_data_server }},nolock,noatime,soft,rw"
       device: ":{{ nfs_data_device }}"
 
-- name: Start docker-compose services
-  community.docker.docker_compose:
-    project_name: "{{ project_name }}"
-    project_src: "{{ project_folder }}"
-    pull: yes
-    remove_orphans: yes
+- name: Start docker images
+  ansible.builtin.import_tasks: ../tasks/docker-compose-up.yml

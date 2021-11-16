@@ -9,6 +9,12 @@ nfs_data_server: 192.168.1.10
 nfs_data_device: /data
 nfs_data_volume: nfs-data
 
+# Updates
+update_system: no
+restart_system: no
+update_containers: yes
+docker_prune: yes
+
 # Teardown
 teardown_containers: yes
 teardown_images: yes
@@ -175,6 +181,7 @@ overseerr_enable_discord_notifications: yes
 overseerr_discord_webhook_url: "change.me"
 overseerr_discord_bot_name: "overseerr"
 overseerr_discord_bot_avatar: "https://github.com/sct/overseerr/blob/develop/public/os_logo_filled.png"
+overseerr_discord_test_notification: yes
 
 # Requestrr
 requestrr_enable: true

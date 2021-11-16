@@ -1,0 +1,14 @@
+- name: Template docker compose file
+  ansible.builtin.template:
+    src: ../templates/docker-compose.yml.j2
+    dest: "{{ project_folder }}/docker-compose.yml"
+    owner: "{{ ansible_facts.user_id }}"
+    group: "{{ ansible_facts.user_id }}"
+    mode: '0640'
+
+- name: Start docker-compose services
+  community.docker.docker_compose:
+    project_name: "{{ project_name }}"
+    project_src: "{{ project_folder }}"
+    pull: yes
+    remove_orphans: yes

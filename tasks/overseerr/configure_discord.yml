@@ -24,7 +24,8 @@
   retries: 10
   delay: 10
   until: _response.status != -1 and _response.status < 500 and _response.status != 404
-
+  when: overseerr_discord_test_notification
+  
 - name: Set Discord notifications configuration
   ansible.builtin.uri:
     url: "{{ overseerr_api }}/settings/notifications/discord"

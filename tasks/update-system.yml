@@ -1,0 +1,15 @@
+- name: apt update
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: apt full-upgrade
+  ansible.builtin.apt:
+    upgrade: dist
+
+- name: install intel drivers
+  ansible.builtin.apt:
+    pkg: 
+      - linux-generic-hwe-20.04
+      - xserver-xorg-video-intel
+    state: present
+  when: plex_enable_quicksync

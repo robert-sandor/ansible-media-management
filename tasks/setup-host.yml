@@ -1,10 +1,5 @@
-- name: Update apt cache
-  ansible.builtin.apt:
-    update_cache: yes
-
 - name: Update system
-  ansible.builtin.apt:
-    upgrade: dist
+  ansible.builtin.import_tasks: ../tasks/update-system.yml
 
 - name: Update timezone to {{ timezone }}
   ansible.builtin.timezone:
