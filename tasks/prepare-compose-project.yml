@@ -6,8 +6,6 @@
     group: "{{ ansible_facts.user_id }}"
     mode: '0750'
 
-
-
 - name: Create docker network {{ network_name }}
   community.docker.docker_network:
     name: "{{ network_name }}"
@@ -30,8 +28,8 @@
     name: "{{ nfs_data_volume }}"
     driver: local
     driver_options:
-      type: nfs
-      o: "addr={{ nfs_data_server }},nolock,noatime,soft,rw"
+      type: nfs4
+      o: "addr={{ nfs_data_server }},rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14"
       device: ":{{ nfs_data_device }}"
 
 - name: Start docker images
