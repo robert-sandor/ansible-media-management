@@ -36,7 +36,3 @@
     - name: Configure Overseerr
       ansible.builtin.import_tasks: ../tasks/overseerr/configure.yml
       when: overseerr_enable
-
-    - name: Configure Requestrr
-      ansible.builtin.import_tasks: ../tasks/requestrr/configure.yml
-      when: requestrr_enable

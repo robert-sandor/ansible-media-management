@@ -231,31 +231,6 @@ services:
       - traefik.http.routers.{{ overseerr_name }}.tls.certresolver={{ acme_provider }}
 
 {% endif %}
-{% if requestrr_enable %}
-  {{ requestrr_name }}:
-    container_name: {{ requestrr_name }}
-    hostname: {{ requestrr_hostname }}
-    image: {{ requestrr_image }}:{{ requestrr_version }}
-    restart: {{ restart_policy }}
-    environment:
-      - PUID={{ ansible_facts.user_uid }}
-      - PGID={{ ansible_facts.user_gid }}
-      - TZ={{ timezone }}
-    volumes:
-      - {{ requestrr_volume }}:/config
-    networks:
-      - {{ network_name }}
-    expose:
-      - {{ requestrr_port }}
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.{{ requestrr_name }}.rule=Host(`{{ requestrr_hostname }}.{{ domain }}`)
-      - traefik.http.routers.{{ requestrr_name }}.entrypoints=websecure
-      - traefik.http.services.{{ requestrr_name }}.loadbalancer.server.port={{ requestrr_port }}
-      - traefik.http.routers.{{ requestrr_name }}.service={{ requestrr_name }}
-      - traefik.http.routers.{{ requestrr_name }}.tls.certresolver={{ acme_provider }}
-
-{% endif %}
 {% if prom_node_exp_enable %}
   {{ prom_node_exp_name }}:
     container_name: {{ prom_node_exp_name }}
@@ -328,6 +303,4 @@ volumes:
   {{ bazarr_volume }}:
     external: true
   {{ overseerr_volume }}:
-    external: true
-  {{ requestrr_volume }}:
     external: true
