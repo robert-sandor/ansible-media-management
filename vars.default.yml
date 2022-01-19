@@ -111,6 +111,8 @@ jackett_config_proxy_url: ''
 jackett_config_proxy_port: ''
 jackett_config_proxy_username: ''
 jackett_config_proxy_password: ''
+jackett_config_flaresolverr_maxtimeout: 55000
+jackett_config_flaresolverrurl: ''
 
 # Jackett indexer config
 jackett_indexer_name: changeme

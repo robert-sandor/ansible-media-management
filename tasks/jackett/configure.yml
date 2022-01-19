@@ -55,6 +55,8 @@
       proxy_port: "{{ jackett_config_proxy_port }}"
       proxy_username: "{{ jackett_config_proxy_username }}"
       proxy_password: "{{ jackett_config_proxy_password }}"
+      flaresolverr_maxtimeout: "{{ jackett_config_flaresolverr_maxtimeout }}"
+      flaresolverrurl: "{{ jackett_config_flaresolverrurl }}"
     headers:
       Cookie: "{{ jackett_cookie }}"
     validate_certs: "{{ validate_certificates }}"
