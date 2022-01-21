@@ -104,6 +104,7 @@ jackett_config_cache_enabled: true
 jackett_config_cache_ttl: '7200'
 jackett_config_cache_max_results_per_indexer: '1000'
 jackett_config_flaresolverrurl: ''
+jackett_config_flaresolverr_maxtimeout: 55000
 jackett_config_omdbkey: ''
 jackett_config_omdburl: ''
 jackett_config_proxy_type: '-1'
@@ -111,8 +112,6 @@ jackett_config_proxy_url: ''
 jackett_config_proxy_port: ''
 jackett_config_proxy_username: ''
 jackett_config_proxy_password: ''
-jackett_config_flaresolverr_maxtimeout: 55000
-jackett_config_flaresolverrurl: ''
 
 # Jackett indexer config
 jackett_indexer_name: changeme

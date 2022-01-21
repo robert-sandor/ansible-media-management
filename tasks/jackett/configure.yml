@@ -48,6 +48,7 @@
       cache_ttl: "{{ jackett_config_cache_ttl }}"
       cache_max_results_per_indexer: "{{ jackett_config_cache_max_results_per_indexer }}"
       flaresolverrurl: "{{ jackett_config_flaresolverrurl }}"
+      flaresolverr_maxtimeout: "{{ jackett_config_flaresolverr_maxtimeout }}"
       omdbkey: "{{ jackett_config_omdbkey }}"
       omdburl: "{{ jackett_config_omdburl }}"
       proxy_type: "{{ jackett_config_proxy_type }}"
@@ -55,8 +56,6 @@
       proxy_port: "{{ jackett_config_proxy_port }}"
       proxy_username: "{{ jackett_config_proxy_username }}"
       proxy_password: "{{ jackett_config_proxy_password }}"
-      flaresolverr_maxtimeout: "{{ jackett_config_flaresolverr_maxtimeout }}"
-      flaresolverrurl: "{{ jackett_config_flaresolverrurl }}"
     headers:
       Cookie: "{{ jackett_cookie }}"
     validate_certs: "{{ validate_certificates }}"
