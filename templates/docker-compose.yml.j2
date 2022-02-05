@@ -54,10 +54,7 @@ services:
       - traefik.http.routers.metrics.service=prometheus@internal
       - traefik.http.routers.metrics.tls.certresolver={{ acme_provider }}
 {% endif %}
-      - flame.type=application
-      - flame.name={{ traefik_name }}
-      - flame.url={{ traefik_name }}.{{ domain }}
-      - flame.icon=traffic-light
+      - com.centurylinklabs.watchtower.enable={{ traefik_autoupdate | ternary('true', 'false')}}
     restart: {{ restart_policy }}
 
 {% endif %}
@@ -89,6 +86,7 @@ services:
       - traefik.http.services.{{ qbt_name }}.loadbalancer.server.port={{ qbt_ui_port }}
       - traefik.http.routers.{{ qbt_name }}.service={{ qbt_name }}
       - traefik.http.routers.{{ qbt_name }}.tls.certresolver={{ acme_provider }}
+      - com.centurylinklabs.watchtower.enable={{ qbt_autoupdate | ternary('true', 'false')}}
 
 {% endif %}
 {% if jackett_enable %}
@@ -117,6 +115,7 @@ services:
       - traefik.http.services.{{ jackett_name }}.loadbalancer.server.port={{ jackett_port }}
       - traefik.http.routers.{{ jackett_name }}.service={{ jackett_name }}
       - traefik.http.routers.{{ jackett_name }}.tls.certresolver={{ acme_provider }}
+      - com.centurylinklabs.watchtower.enable={{ jackett_autoupdate | ternary('true', 'false')}}
 
 {% endif %}
 {% if sonarr_enable %}
@@ -146,6 +145,7 @@ services:
       - traefik.http.services.{{ sonarr_name }}.loadbalancer.server.port={{ sonarr_port }}
       - traefik.http.routers.{{ sonarr_name }}.service={{ sonarr_name }}
       - traefik.http.routers.{{ sonarr_name }}.tls.certresolver={{ acme_provider }}
+      - com.centurylinklabs.watchtower.enable={{ sonarr_autoupdate | ternary('true', 'false')}}
 
 {% endif %}
 {% if radarr_enable %}
@@ -175,6 +175,7 @@ services:
       - traefik.http.services.{{ radarr_name }}.loadbalancer.server.port={{ radarr_port }}
       - traefik.http.routers.{{ radarr_name }}.service={{ radarr_name }}
       - traefik.http.routers.{{ radarr_name }}.tls.certresolver={{ acme_provider }}
+      - com.centurylinklabs.watchtower.enable={{ radarr_autoupdate | ternary('true', 'false')}}
 
 {% endif %}
 {% if bazarr_enable %}
@@ -204,6 +205,7 @@ services:
       - traefik.http.services.{{ bazarr_name }}.loadbalancer.server.port={{ bazarr_port }}
       - traefik.http.routers.{{ bazarr_name }}.service={{ bazarr_name }}
       - traefik.http.routers.{{ bazarr_name }}.tls.certresolver={{ acme_provider }}
+      - com.centurylinklabs.watchtower.enable={{ bazarr_autoupdate | ternary('true', 'false')}}
 
 {% endif %}
 {% if overseerr_enable %}
@@ -229,6 +231,7 @@ services:
       - traefik.http.services.{{ overseerr_name }}.loadbalancer.server.port={{ overseerr_port }}
       - traefik.http.routers.{{ overseerr_name }}.service={{ overseerr_name }}
       - traefik.http.routers.{{ overseerr_name }}.tls.certresolver={{ acme_provider }}
+      - com.centurylinklabs.watchtower.enable={{ overseerr_autoupdate | ternary('true', 'false')}}
 
 {% endif %}
 {% if prom_node_exp_enable %}
@@ -243,6 +246,8 @@ services:
     volumes:
       - '/:/host:ro,rslave'
     restart: {{ restart_policy }}
+    labels:
+      - com.centurylinklabs.watchtower.enable={{ prom_node_exp_autoupdate | ternary('true', 'false')}}
 
 {% endif %}
 {% if pagent_enable %}
@@ -257,6 +262,8 @@ services:
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock'
     restart: {{ restart_policy }}
+    labels:
+      - com.centurylinklabs.watchtower.enable={{ pagent_autoupdate | ternary('true', 'false')}}
 
 {% endif %}
 {% if wt_enable %}
@@ -270,6 +277,12 @@ services:
 {% if wt_monitor_only %}
       - "--monitor-only"
 {% endif %}
+{% if wt_update_label_only %}
+      - "--label-enable"
+{% endif %}
+{% if wt_discord_skip_startup_message %}
+      - "--no-startup-message"
+{% endif %}
 {% if wt_discord_enable %}
       - "--notifications=slack"
       - "--notification-slack-hook-url={{ wt_discord_hook_url }}"
@@ -281,6 +294,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - {{ network_name }}
+    labels:
+      - com.centurylinklabs.watchtower.enable={{ wt_autoupdate | ternary('true', 'false')}}
     
 {% endif %}
 networks:

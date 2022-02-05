@@ -30,6 +30,7 @@ traefik_image: traefik
 traefik_enable_metrics: yes
 traefik_enable_access_logs: yes
 traefik_metrics_port: 8081
+traefik_autoupdate: no
 
 # ACME Certificates config
 acme_email: email@example.com
@@ -49,6 +50,7 @@ qbt_hostname: "qbt"
 qbt_volume: "{{ qbt_name }}-data"
 qbt_image: ghcr.io/linuxserver/qbittorrent
 qbt_version: latest
+qbt_autoupdate: no
 
 # Qbittorrent server config
 qbt_ui_port: 8082
@@ -88,6 +90,7 @@ jackett_hostname: "{{ jackett_name }}"
 jackett_volume: "{{ jackett_name }}-data"
 jackett_image: ghcr.io/linuxserver/jackett
 jackett_version: latest
+jackett_autoupdate: no
 jackett_port: 9117
 jackett_apply_dark_theme: true
 jackett_admin_password: changeme
@@ -132,6 +135,7 @@ sonarr_hostname: "{{ sonarr_name }}"
 sonarr_volume: "{{ sonarr_name }}-data"
 sonarr_image: ghcr.io/linuxserver/sonarr
 sonarr_version: latest
+sonarr_autoupdate: no
 sonarr_port: 8989
 sonarr_apply_dark_theme: yes
 sonarr_indexer_categories: [ ]
@@ -146,6 +150,7 @@ radarr_hostname: "{{ radarr_name }}"
 radarr_volume: "{{ radarr_name }}-data"
 radarr_image: ghcr.io/linuxserver/radarr
 radarr_version: latest
+radarr_autoupdate: no
 radarr_port: 7878
 radarr_apply_dark_theme: yes
 radarr_indexer_categories: [ ]
@@ -160,6 +165,7 @@ bazarr_hostname: "{{ bazarr_name }}"
 bazarr_volume: "{{ bazarr_name }}-data"
 bazarr_image: ghcr.io/linuxserver/bazarr
 bazarr_version: latest
+bazarr_autoupdate: no
 bazarr_port: 6767
 bazarr_apply_dark_theme: yes
 
@@ -169,6 +175,7 @@ overseerr_hostname: "{{ overseerr_name }}"
 overseerr_volume: "{{ overseerr_name }}-data"
 overseerr_image: ghcr.io/linuxserver/overseerr
 overseerr_version: latest
+overseerr_autoupdate: no
 overseerr_port: 5055
 overseerr_plex_auth_token: changeme # Plex auth token, to get it follow https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
 overseerr_plex_ip: 192.168.1.1      # IP address of the plex server running locally
@@ -189,6 +196,7 @@ prom_node_exp_enable: yes
 prom_node_exp_version: latest
 prom_node_exp_name: node-exporter 
 prom_node_exp_image: prom/node-exporter
+prom_node_exp_autoupdate: no
 
 # Portainer Agent
 pagent_enable: yes
@@ -196,6 +204,7 @@ pagent_name: pagent
 pagent_hostname: "{{ pagent_name }}"
 pagent_image: portainer/agent
 pagent_version: latest
+pagent_autoupdate: no
 
 # watchtower - to monitor for updated docker images
 wt_enable: yes
@@ -204,6 +213,9 @@ wt_version: latest
 wt_image: containrrr/watchtower
 wt_cron_schedule: "0 0 1 * * *"
 wt_discord_enable: no
+wt_discord_skip_startup_message: no
 wt_discord_hook_url: https://discord.com/api/webhooks/.../.../slack
 wt_discord_indentifier: watchtower-{{project_name}}
-wt_monitor_only: yes
+wt_monitor_only: no
+wt_update_label_only: yes
+wt_autoupdate: no
