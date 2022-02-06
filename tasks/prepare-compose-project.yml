@@ -38,7 +38,7 @@
     driver: local
     driver_options:
       type: cifs
-      o: "username={{ cifs_data_username }},password={{ cifs_data_password }},file_mode=0777,dir_mode=0777"
+      o: "username={{ cifs_data_username }},password={{ cifs_data_password }},file_mode=0775,dir_mode=0775,rw"
       device: "//{{ cifs_data_server }}/{{ cifs_data_device }}"
   when: data_volume_type == 'cifs'
 
