@@ -5,9 +5,16 @@ project_name: media-mgmt
 network_name: "{{ project_name }}-net"
 project_folder: "~/{{ project_name }}"
 
+data_volume: data
+data_volume_type: cifs # cifs or nfs
+
+cifs_data_server: 192.168.1.10
+cifs_data_device: data
+cifs_data_username: user
+cifs_data_password: changeme
+
 nfs_data_server: 192.168.1.10
 nfs_data_device: /data
-nfs_data_volume: nfs-data
 
 # Updates
 update_system: no

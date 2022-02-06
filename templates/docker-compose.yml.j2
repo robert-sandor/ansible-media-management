@@ -71,7 +71,7 @@ services:
       - WEBUI_PORT={{ qbt_ui_port }}
     volumes:
       - {{ qbt_volume }}:/config
-      - {{ nfs_data_volume }}:/data
+      - {{ data_volume }}:/data
     networks:
       - {{ network_name }}
     ports:
@@ -133,7 +133,7 @@ services:
 {% endif %}
     volumes:
       - {{ sonarr_volume }}:/config
-      - {{ nfs_data_volume }}:/data
+      - {{ data_volume }}:/data
     networks:
       - {{ network_name }}
     expose:
@@ -163,7 +163,7 @@ services:
 {% endif %}
     volumes:
       - {{ radarr_volume }}:/config
-      - {{ nfs_data_volume }}:/data
+      - {{ data_volume }}:/data
     networks:
       - {{ network_name }}
     expose:
@@ -193,7 +193,7 @@ services:
 {% endif %}
     volumes:
       - {{ bazarr_volume }}:/config
-      - {{ nfs_data_volume }}:/data
+      - {{ data_volume }}:/data
     networks:
       - {{ network_name }}
     expose:
@@ -303,7 +303,7 @@ networks:
     external: true
 
 volumes:
-  {{ nfs_data_volume }}:
+  {{ data_volume }}:
     external: true
   {{ acme_volume }}:
     external: true

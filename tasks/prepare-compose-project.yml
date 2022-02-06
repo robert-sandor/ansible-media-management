@@ -24,12 +24,23 @@
 
 - name: Create NFS Data share volume
   community.docker.docker_volume:
-    name: "{{ nfs_data_volume }}"
+    name: "{{ data_volume }}"
     driver: local
     driver_options:
       type: nfs4
       o: "addr={{ nfs_data_server }},rw,noatime,rsize=8192,wsize=8192,tcp,timeo=14"
       device: ":{{ nfs_data_device }}"
+  when: data_volume_type == 'nfs'
+
+- name: Create SMB Data share volume
+  community.docker.docker_volume:
+    name: "{{ data_volume }}"
+    driver: local
+    driver_options:
+      type: cifs
+      o: "username={{ cifs_data_username }},password={{ cifs_data_password }},file_mode=0777,dir_mode=0777"
+      device: "//{{ cifs_data_server }}/{{ cifs_data_device }}"
+  when: data_volume_type == 'cifs'
 
 - name: Start docker images
   ansible.builtin.import_tasks: ../tasks/docker-compose-up.yml
